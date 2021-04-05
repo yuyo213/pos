@@ -990,7 +990,7 @@ public class mainFrame extends javax.swing.JFrame {
         lblTotStock.setText("");
         getLblCurStock().setText("");
     }
-
+/*test*/
     private void update2() {
         PreparedStatement pst;
         ResultSet rs;
