@@ -1,0 +1,151 @@
+//-----Future Plans -----//
+        /*
+        mPanel = new JPanel();
+        optPanel = new JPanel();
+        frame = new JFrame("Point Of Sale");
+        wOpt = new JComboBox<>(wsOpt);
+        framePanel = new JPanel();
+        b1 = new JButton("Read");
+        b2 = new JButton("Save");
+        b3 = new JButton("See");
+        fInput = new JTextField();
+      
+          framePanel.setLayout(null);
+         mPanel.add(optPanel);
+           framePanel.add(mPanel);
+         framePanel.repaint();
+         framePanel.setBackground(Color.GRAY);
+         mainPanel();
+        optionPanel();
+        lDate.setText(sdf.format(d));
+        lTime.setText(stf.format(d));
+        frame.setSize(w, h);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        positions();
+        createEvent();
+    }
+    private void positions() {
+        mPanel.setBounds(0, 0, w, h);
+        optPanel.setBounds(0, 0, w, h);
+        lDate.setBounds(800, 0, 100, 30);
+        b1.setBounds(100, 50, 100, 25);
+        b2.setBounds(100, 100, 125, 25);
+        fInput.setBounds(100, 150, 125, 25);
+        wOpt.setBounds(100, 200, 150, 25);
+        result.setBounds(100, 250, 150, 25);
+        b3.setBounds(500, 250, 100, 25);
+    }
+    
+    
+   
+    private void mainPanel(){
+        mPanel.add(lDate);
+        mPanel.add(b3);
+        mPanel.add(lTime);
+    }
+    private void optionPanel(){
+        optPanel.add(b1);
+        optPanel.add(b2);
+        optPanel.add(fInput);
+        optPanel.add(wOpt);
+        optPanel.setBackground(Color.pink);
+        optPanel.add(result);
+    }
+
+    private void createEvent() {
+
+        b1.addActionListener((evt) -> {
+            b1ActionPerformed(evt);
+        });
+        b2.addActionListener((evt) -> {
+            b2ActionPerformed(evt);
+        });
+        wOpt.addItemListener((evt) -> {
+            cbOpItemPerformed(evt);
+        });
+        b3.addActionListener((evt) -> {
+            b3ActionPerformed(evt);
+        });
+    }
+
+    private void b1ActionPerformed(ActionEvent e) {
+        ReadResolution();
+    }
+
+    private void b2ActionPerformed(ActionEvent e) {
+        saveResolution();
+    }
+
+    private void b3ActionPerformed(ActionEvent e) {
+        framePanel.remove(mPanel);
+        framePanel.add(optPanel);
+        framePanel.repaint();
+
+    }
+
+    private void setRes() {
+        frame.setSize(w, h);
+        mPanel.setSize(w, h);
+        frame.setLocationRelativeTo(null);
+       positions();
+    }
+
+    private void cbOpItemPerformed(ItemEvent e) {
+        int select = wOpt.getSelectedIndex();
+        switch (select) {
+            case 1 -> {
+                w = 1280;
+                h = 720;
+                setRes();
+            }
+            case 2 -> {
+                w = 1280;
+                h = 1024;
+                setRes();
+            }
+        }
+    }
+
+    private void ReadResolution() {
+        try {
+
+            File myObj = new File("resolution.cfg");
+            Scanner myReader = new Scanner(myObj);
+            int datas = myReader.nextInt();
+            w = datas;
+            while (myReader.hasNextLine()) {
+                int data = myReader.nextInt();
+                //System.out.println(data);
+
+                h = data;
+
+            }
+            myReader.close();
+            result.setText("Current Resolution: " + w + "x" + h);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveResolution() {
+        try {
+            File myObj = new File("resolution.cfg");
+            myObj.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            FileWriter myWriter = new FileWriter("resolution.cfg");
+            myWriter.write(w + "\n" + h);
+            // myWriter.write(w + "\n" + h);
+            myWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+         */
