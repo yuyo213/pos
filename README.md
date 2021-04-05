@@ -1,1 +1,4 @@
 POINT OF SALE TESTS
+e
+e
+e
