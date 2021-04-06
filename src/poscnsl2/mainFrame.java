@@ -9,9 +9,13 @@ import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.awt.event.KeyEvent;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -33,14 +37,14 @@ public class mainFrame extends javax.swing.JFrame {
     Connection con = My_Connection.dbConnection();
     int w = 720, h = 740;
     OptionPanel optP = new OptionPanel();
-    SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM/dd/yyyy");
-    SimpleDateFormat stf = new SimpleDateFormat("HH:mm:ss");
     Date d = new Date();
     SimpleDateFormat dbD = new SimpleDateFormat("MM-dd-yyyy");
-    private String dbDate = dbD.format(d);
+    private final String dbDate = dbD.format(d);
 
     public mainFrame() {
         initComponents();
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM/dd/yyyy");
+      //  SimpleDateFormat stf = new SimpleDateFormat("HH:mm:ss");
         lblDate.setText(sdf.format(d));
         time();
         setLocationRelativeTo(null);
@@ -635,7 +639,7 @@ public class mainFrame extends javax.swing.JFrame {
                 String money = JOptionPane.showInputDialog("Input Money");
                 double tMoney = Double.parseDouble(money);
                 double totalofItem = Double.parseDouble(lblTotal.getText());
-                if (money == null || (money != null && ("".equals(money)))) {
+                if (money == null || (" ".equals(money))) {
                     throw new Exception("empty Fields");
                 } else {
                     if (tMoney < totalofItem || money.equals("0")) {
@@ -724,7 +728,8 @@ public class mainFrame extends javax.swing.JFrame {
             Double resultPrice = numPrice * numQuantity;
             dtm.addRow(new Object[]{lblName.getText(), resultPrice,
                 getTfQuantity().getText(), dbDate});// put object
-            jTable1.changeSelection(jTable1.getRowCount(), 0, false, false);
+            jTable1.changeSelection(row, 1, false, false);
+            //jTable1.setRowSelectionAllowed(true);
             String itemName = (String) dtm.getValueAt(row, 0);
             String bItem = (String) dtm.getValueAt(row, 2);
             test();
@@ -738,17 +743,12 @@ public class mainFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_baddItemActionPerformed
     public void test() {
-        for (int i = 0; i < jTable1.getRowCount(); i++) {
-            for (int j = 0; j < jTable1.getColumnCount(); j++) {
-                if (jTable1.getValueAt(i, j).equals(lblName.getText())) {
-                    System.out.println(jTable1.getValueAt(i, 0));
-                    int tquant = Integer.parseInt((String) jTable1.getValueAt(i, 2));
-                    // int quan = Integer.parseInt(tfQuantity.getText());
-                    int res = 0;
-                    res = res + tquant;
-                    //  System.out.println(res);
-                    jTable1.setValueAt(res, i, 2);
-                }
+        int row = jTable1.getSelectedRow();
+        int srow = tableStock.getRowCount();
+        for (int i = 0; i < srow; i++) {
+            String name = (String) tableStock.getValueAt(i, 1);
+            if (jTable1.getValueAt(row, 0).equals(name)) {
+
             }
         }
     }
@@ -757,10 +757,12 @@ public class mainFrame extends javax.swing.JFrame {
         DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
         int i = jTable1.getSelectedRow();
         if (i >= 0) {
+
             String iName = (String) jTable1.getValueAt(i, 0);
             String Squant = (String) jTable1.getValueAt(i, 2);
             char op = '+';
             operators(op, iName, Squant);
+
             dtm.removeRow(i);
         } else {
             JOptionPane.showMessageDialog(null, "Delete Error");
@@ -948,7 +950,6 @@ public class mainFrame extends javax.swing.JFrame {
         PreparedStatement pst;
         ResultSet rs;
         int flg = 0;
-        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
         try {
             String query = "Select * from itemLists where " + value + "=?";
             pst = con.prepareStatement(query);
@@ -967,7 +968,7 @@ public class mainFrame extends javax.swing.JFrame {
                 clear();
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
@@ -984,14 +985,15 @@ public class mainFrame extends javax.swing.JFrame {
     private void time() {
         Thread t = new Thread() {
 
+            @Override
             public void run() {
                 while (true) {
                     SimpleDateFormat date = new SimpleDateFormat("hh:mm");
-                    String dateString = date.format(new Date()).toString();
+                    String dateString = date.format(new Date());
                     lblTime.setText(dateString);
                     try {
                         Thread.sleep(1);
-                    } catch (Exception e) {
+                    } catch (InterruptedException e) {
 
                     }
                 }
@@ -1006,7 +1008,7 @@ public class mainFrame extends javax.swing.JFrame {
             SecureRandom prng = SecureRandom.getInstance("SHA1PRNG");
 
             //generate a random number
-            String randomNum = new Integer(prng.nextInt()).toString();
+            String randomNum = Integer.toString(prng.nextInt());
 
             //get its digest
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
@@ -1015,7 +1017,7 @@ public class mainFrame extends javax.swing.JFrame {
             //System.out.println("Random number: " + randomNum);
             lblTransaction.setText(randomNum);
             //  System.out.println("Message digest");
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException e) {
             System.out.println(e);
         }
     }
@@ -1048,22 +1050,16 @@ public class mainFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(mainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(mainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(mainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(mainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
+        //</editor-fold>
+
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new mainFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new mainFrame().setVisible(true);
         });
     }
 
