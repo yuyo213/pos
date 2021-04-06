@@ -56,23 +56,17 @@ public class mainFrame extends javax.swing.JFrame {
     public void setTfQuantity(javax.swing.JTextField tfQuantity) {
         this.tfQuantity = tfQuantity;
     }
-     public String getdbTime() {
-        return dbTime;
-    }
-
+ 
     /**
      * @param tfQuantity the tfQuantity to set
      */
-    public void setdbTime(String time) {
-        this.dbTime = time;
-    }
+ 
     /**
      * Creates new form mainFrame
      */
     int w = 720, h = 740;
     OptionPanel optP = new OptionPanel();
     Connection con = My_Connection.dbConnection();
-    private String dbTime;
     public mainFrame() {
         initComponents();
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM/dd/yyyy");
@@ -81,7 +75,6 @@ public class mainFrame extends javax.swing.JFrame {
         lblDate.setText(sdf.format(d));
         String dbDate = sdf.format(d);
         time();
-         System.out.println(getdbTime());
         // update2();
         // add(optP);
         // optP.setSize(w, h);
@@ -1025,7 +1018,6 @@ public class mainFrame extends javax.swing.JFrame {
                     SimpleDateFormat date = new SimpleDateFormat("hh:mm");
                     String dateString = date.format(new Date()).toString();
                     lblTime.setText(dateString);
-                    setdbTime(dateString);
                     try {
                         Thread.sleep(1);
                     } catch (Exception e) {
