@@ -16,7 +16,6 @@ import java.security.SecureRandom;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
-import static poscnsl2.LoginSystem.con;
 
 /**
  *
@@ -31,26 +30,19 @@ public class mainFrame extends javax.swing.JFrame {
     public void setTfQuantity(javax.swing.JTextField tfQuantity) {
         this.tfQuantity = tfQuantity;
     }
-
-  
-
+    Connection con = My_Connection.dbConnection();
     int w = 720, h = 740;
     OptionPanel optP = new OptionPanel();
-   public void test(String user){
-       System.out.println(user);
-   }
+    SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM/dd/yyyy");
+    SimpleDateFormat stf = new SimpleDateFormat("HH:mm:ss");
+    Date d = new Date();
+    SimpleDateFormat dbD = new SimpleDateFormat("MM-dd-yyyy");
+    private String dbDate = dbD.format(d);
+
     public mainFrame() {
         initComponents();
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM/dd/yyyy");
-        SimpleDateFormat stf = new SimpleDateFormat("HH:mm:ss");
-        Date d = new Date();
         lblDate.setText(sdf.format(d));
-        String dbDate = sdf.format(d);
-       
         time();
-        // update2();
-        // add(optP);
-        // optP.setSize(w, h);
         setLocationRelativeTo(null);
         setResizable(false);
         tfItemCode.requestFocus();
@@ -612,13 +604,7 @@ public class mainFrame extends javax.swing.JFrame {
             transIDs();
         }
     }//GEN-LAST:event_bResetActionPerformed
-    public void userLog(String userActive) {
-        PreparedStatement pst;
-        ResultSet rs;
-        String query = "INSERT into tableofTrans \n"
-                + "(Seller) SELECT uName from userLogin \n"
-                + "WHERE uName=" + userActive + "";
-    }
+
     private void bOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOptionActionPerformed
         // OPTION
         PanelFrame.hide();
@@ -630,8 +616,12 @@ public class mainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_bOptionActionPerformed
 
     private void bItemViewerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bItemViewerActionPerformed
-        MainPanel.hide();
-        itemViewer.show();
+        PanelFrame.removeAll();
+        PanelFrame.repaint();
+        PanelFrame.revalidate();
+        PanelFrame.add(itemViewer);
+        PanelFrame.repaint();
+        PanelFrame.revalidate();
 
     }//GEN-LAST:event_bItemViewerActionPerformed
 
@@ -733,11 +723,11 @@ public class mainFrame extends javax.swing.JFrame {
             Double numQuantity = Double.parseDouble(getTfQuantity().getText());
             Double resultPrice = numPrice * numQuantity;
             dtm.addRow(new Object[]{lblName.getText(), resultPrice,
-                getTfQuantity().getText(), lblDate.getText()});// put object
+                getTfQuantity().getText(), dbDate});// put object
             jTable1.changeSelection(jTable1.getRowCount(), 0, false, false);
             String itemName = (String) dtm.getValueAt(row, 0);
             String bItem = (String) dtm.getValueAt(row, 2);
-            // DefaultTableModel tb1 = (DefaultTableModel) tableStock.getModel();
+            test();
             char minus = '-';
             operators(minus, itemName, bItem);
         }
@@ -747,18 +737,31 @@ public class mainFrame extends javax.swing.JFrame {
         getSum();
 
     }//GEN-LAST:event_baddItemActionPerformed
-
+    public void test() {
+        for (int i = 0; i < jTable1.getRowCount(); i++) {
+            for (int j = 0; j < jTable1.getColumnCount(); j++) {
+                if (jTable1.getValueAt(i, j).equals(lblName.getText())) {
+                    System.out.println(jTable1.getValueAt(i, 0));
+                    int tquant = Integer.parseInt((String) jTable1.getValueAt(i, 2));
+                    // int quan = Integer.parseInt(tfQuantity.getText());
+                    int res = 0;
+                    res = res + tquant;
+                    //  System.out.println(res);
+                    jTable1.setValueAt(res, i, 2);
+                }
+            }
+        }
+    }
     private void bDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDeleteActionPerformed
         // TODO add your handling code here:
         DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
         int i = jTable1.getSelectedRow();
-        String iName = (String) jTable1.getValueAt(i, 0);
-        String Squant = (String) jTable1.getValueAt(i, 2);
-        char op = '+';
-        operators(op, iName, Squant);
         if (i >= 0) {
+            String iName = (String) jTable1.getValueAt(i, 0);
+            String Squant = (String) jTable1.getValueAt(i, 2);
+            char op = '+';
+            operators(op, iName, Squant);
             dtm.removeRow(i);
-
         } else {
             JOptionPane.showMessageDialog(null, "Delete Error");
         }
@@ -801,12 +804,6 @@ public class mainFrame extends javax.swing.JFrame {
         autoSum();
     }//GEN-LAST:event_tfQuantityKeyReleased
 
-    private void ItemBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemBackActionPerformed
-        // TODO add your handling code here:
-        itemViewer.hide();
-        MainPanel.show();
-    }//GEN-LAST:event_ItemBackActionPerformed
-
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         int input = JOptionPane.showOptionDialog(null, "Do you want to exit?", "Exit",
                 JOptionPane.OK_CANCEL_OPTION,
@@ -817,6 +814,16 @@ public class mainFrame extends javax.swing.JFrame {
             setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void ItemBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemBackActionPerformed
+        // TODO add your handling code here:
+        PanelFrame.removeAll();
+        PanelFrame.repaint();
+        PanelFrame.revalidate();
+        PanelFrame.add(MainPanel);
+        PanelFrame.repaint();
+        PanelFrame.revalidate();
+    }//GEN-LAST:event_ItemBackActionPerformed
     private int autoSum() {
         int a, b, c;
 
@@ -826,7 +833,7 @@ public class mainFrame extends javax.swing.JFrame {
             a = 0;
             b = 0;
             c = 0;
-           lblCurStock.setText(Integer.toString(c));
+            lblCurStock.setText(Integer.toString(c));
 
             c = a - b;
             return (int) c;
@@ -843,7 +850,7 @@ public class mainFrame extends javax.swing.JFrame {
                 return (int) c;
             }
             c = a - b;
-           lblCurStock.setText(Integer.toString(c));
+            lblCurStock.setText(Integer.toString(c));
 
         }
 
@@ -892,7 +899,7 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void operators(char operator, String iName, String bItem) {
+    public void operators(char operator, String iName, String bItem) {
         DefaultTableModel tb1 = (DefaultTableModel) tableStock.getModel();
         for (int i = 0; i < tableStock.getRowCount(); i++) {
             for (int j = 0; j < tableStock.getColumnCount(); j++) {
@@ -971,7 +978,7 @@ public class mainFrame extends javax.swing.JFrame {
         lblPrice.setText("");
         getTfQuantity().setText("");
         lblTotStock.setText("");
-       lblCurStock.setText("");
+        lblCurStock.setText("");
     }
 
     private void time() {
@@ -1015,6 +1022,14 @@ public class mainFrame extends javax.swing.JFrame {
 
     public void seller() {
         bOption.setEnabled(false);
+    }
+
+    public void userLog(String userActive) {
+        PreparedStatement pst;
+        ResultSet rs;
+        String query = "INSERT into tableofTrans \n"
+                + "(Seller) SELECT uName from userLogin \n"
+                + "WHERE uName='" + userActive + "'";
     }
 
     /**
