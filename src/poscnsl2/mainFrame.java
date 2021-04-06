@@ -16,6 +16,7 @@ import java.security.SecureRandom;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
+import static poscnsl2.LoginSystem.con;
 
 /**
  *
@@ -23,57 +24,29 @@ import net.proteanit.sql.DbUtils;
  */
 public class mainFrame extends javax.swing.JFrame {
 
-    /**
-     * @return the lblCurStock
-     */
-    public javax.swing.JLabel getLblCurStock() {
-        return lblCurStock;
-    }
-
-    /**
-     * @param lblCurStock the lblCurStock to set
-     */
-    public void setLblCurStock(javax.swing.JLabel lblCurStock) {
-        this.lblCurStock = lblCurStock;
-    }
-
-    /**
-     * @return the CurStock
-     *
-     * private int quant;
-     *
-     * /
-     **
-     * @return the tfQuantity
-     */
     public javax.swing.JTextField getTfQuantity() {
         return tfQuantity;
     }
 
-    /**
-     * @param tfQuantity the tfQuantity to set
-     */
     public void setTfQuantity(javax.swing.JTextField tfQuantity) {
         this.tfQuantity = tfQuantity;
     }
- 
-    /**
-     * @param tfQuantity the tfQuantity to set
-     */
- 
-    /**
-     * Creates new form mainFrame
-     */
+
+  
+
     int w = 720, h = 740;
     OptionPanel optP = new OptionPanel();
-    Connection con = My_Connection.dbConnection();
+   public void test(String user){
+       System.out.println(user);
+   }
     public mainFrame() {
         initComponents();
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM/dd/yyyy");
         SimpleDateFormat stf = new SimpleDateFormat("HH:mm:ss");
-         Date d = new Date();
+        Date d = new Date();
         lblDate.setText(sdf.format(d));
         String dbDate = sdf.format(d);
+       
         time();
         // update2();
         // add(optP);
@@ -639,7 +612,13 @@ public class mainFrame extends javax.swing.JFrame {
             transIDs();
         }
     }//GEN-LAST:event_bResetActionPerformed
-
+    public void userLog(String userActive) {
+        PreparedStatement pst;
+        ResultSet rs;
+        String query = "INSERT into tableofTrans \n"
+                + "(Seller) SELECT uName from userLogin \n"
+                + "WHERE uName=" + userActive + "";
+    }
     private void bOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOptionActionPerformed
         // OPTION
         PanelFrame.hide();
@@ -681,7 +660,7 @@ public class mainFrame extends javax.swing.JFrame {
                     }
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e);
+                //   JOptionPane.showMessageDialog(null, "");
             }
 
         }
@@ -810,7 +789,7 @@ public class mainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         int a = Integer.parseInt(lblTotStock.getText());
         if (!lblTotStock.getText().isBlank()) {
-            getLblCurStock().setText(Integer.toString(a));
+            lblCurStock.setText(Integer.toString(a));
         } else {
             autoSum();
         }
@@ -847,7 +826,7 @@ public class mainFrame extends javax.swing.JFrame {
             a = 0;
             b = 0;
             c = 0;
-            getLblCurStock().setText(Integer.toString(c));
+           lblCurStock.setText(Integer.toString(c));
 
             c = a - b;
             return (int) c;
@@ -859,12 +838,12 @@ public class mainFrame extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "no negative number bois", "Invalid Input", 2);
                 tfQuantity.setText("");
                 c = 0;
-                getLblCurStock().setText(Integer.toString(a));
+                lblCurStock.setText(Integer.toString(a));
 
                 return (int) c;
             }
             c = a - b;
-            getLblCurStock().setText(Integer.toString(c));
+           lblCurStock.setText(Integer.toString(c));
 
         }
 
@@ -992,22 +971,7 @@ public class mainFrame extends javax.swing.JFrame {
         lblPrice.setText("");
         getTfQuantity().setText("");
         lblTotStock.setText("");
-        getLblCurStock().setText("");
-    }
-
-    private void update2() {
-        PreparedStatement pst;
-        ResultSet rs;
-        try {
-            //   String sql = "select * from itemLists";
-            String sql = "select ID,itemName as Name,itemQuantity as Quantity,itemPrice as Price from itemLists";
-            pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-            jTable1.setModel(DbUtils.resultSetToTableModel(rs));
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
+       lblCurStock.setText("");
     }
 
     private void time() {

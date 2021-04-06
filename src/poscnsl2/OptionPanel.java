@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 import static poscnsl2.mainFrame.PanelFrame;
 import static poscnsl2.mainFrame.panelOption;
+import static poscnsl2.LoginSystem.con;
 
 /**
  *
@@ -24,8 +25,6 @@ public class OptionPanel extends javax.swing.JPanel {
     /**
      * Creates new form OptionPanel
      */
-    java.sql.Connection con = My_Connection.dbConnection();
-
     public OptionPanel() {
         initComponents();
         update2();
@@ -438,7 +437,7 @@ public class OptionPanel extends javax.swing.JPanel {
         panelTabs.add(crudPanel);
         panelTabs.repaint();
         panelTabs.revalidate();
-         tfItemCode.requestFocus();
+        tfItemCode.requestFocus();
     }//GEN-LAST:event_lblCrudMouseClicked
 
     private void lblCrudMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCrudMouseEntered
@@ -577,7 +576,7 @@ public class OptionPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
-   
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel TransPanel;

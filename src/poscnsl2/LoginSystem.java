@@ -36,7 +36,7 @@ public class LoginSystem extends javax.swing.JFrame {
     /**
      * Creates new form LoginSystem
      */
-    Connection con = My_Connection.dbConnection();
+    static Connection con = My_Connection.dbConnection();
     protected String mod = "Seller";
 
     public LoginSystem() {
@@ -373,7 +373,8 @@ public class LoginSystem extends javax.swing.JFrame {
 
     private void bLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLoginActionPerformed
         PreparedStatement pst;
-        String pos;
+        String pos, user;
+
         ResultSet rs;
         if (tfUser.getText().equals("") || pfPass.getPassword().equals("")) {
             JOptionPane.showMessageDialog(null, "Please input");
@@ -385,13 +386,14 @@ public class LoginSystem extends javax.swing.JFrame {
                 pst.setString(1, userLowletter);
                 pst.setString(2, String.valueOf(pfPass.getPassword()));
                 rs = pst.executeQuery();
-                pos = rs.getString("uPos");
+                pos = rs.getString("ID");
+                user = rs.getString("Name");
+                System.out.println(pos);
                 checkPos(pos);
-
                 pst.close();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Wrong User and Pass");
-               //JOptionPane.showMessageDialog(null, e);
+                //JOptionPane.showMessageDialog(null, e);
                 lblInvalid.show();
             }
         }
@@ -435,10 +437,10 @@ public class LoginSystem extends javax.swing.JFrame {
     public boolean checkPos(String input) {
         PreparedStatement pst;
         ResultSet rs;
-        String pos;
+        String pos, user, uID;
         mainFrame form = new mainFrame();
         boolean user_exist = false;
-        String query = "SELECT * FROM `userLogin` WHERE `uPos` = ?";
+        String query = "SELECT * FROM `userLogin` WHERE `ID` = ?";
 
         try {
             pst = con.prepareStatement(query);
@@ -447,14 +449,19 @@ public class LoginSystem extends javax.swing.JFrame {
 
             if (rs.next()) {
                 user_exist = true;
-
+                uID = rs.getString("ID");
+                user = rs.getString("Name");
                 pos = rs.getString("uPos");
-                if (pos.equals("Admin")) {
-                    System.out.println("WOOOOOOW you're an admin");
-                } else {
-                    System.out.println("WOOOOOOW you're an seller");
-                    form.seller();
+                if (input.equals(uID)) {
+                    if (pos.equals("Admin")) {
+                        System.out.println("WOOOOOOW you're an admin");
+                        form.test(user);
+                    } else {
+                        System.out.println("WOOOOOOW you're an seller");
+                        form.seller();
+                        form.test(user);
 
+                    }
                 }
                 JOptionPane.showMessageDialog(null, "Activated!");
                 form.setVisible(true);
