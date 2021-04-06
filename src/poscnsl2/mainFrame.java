@@ -56,21 +56,32 @@ public class mainFrame extends javax.swing.JFrame {
     public void setTfQuantity(javax.swing.JTextField tfQuantity) {
         this.tfQuantity = tfQuantity;
     }
+     public String getdbTime() {
+        return dbTime;
+    }
 
+    /**
+     * @param tfQuantity the tfQuantity to set
+     */
+    public void setdbTime(String time) {
+        this.dbTime = time;
+    }
     /**
      * Creates new form mainFrame
      */
     int w = 720, h = 740;
     OptionPanel optP = new OptionPanel();
     Connection con = My_Connection.dbConnection();
-
+    private String dbTime;
     public mainFrame() {
         initComponents();
-        Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM/dd/yyyy");
         SimpleDateFormat stf = new SimpleDateFormat("HH:mm:ss");
+         Date d = new Date();
         lblDate.setText(sdf.format(d));
+        String dbDate = sdf.format(d);
         time();
+         System.out.println(getdbTime());
         // update2();
         // add(optP);
         // optP.setSize(w, h);
@@ -366,12 +377,12 @@ public class mainFrame extends javax.swing.JFrame {
         lblDate.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         lblDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         pricePanel.add(lblDate);
-        lblDate.setBounds(495, 12, 167, 28);
+        lblDate.setBounds(382, 12, 280, 28);
 
         jLabel6.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jLabel6.setText("Date Today:");
         pricePanel.add(jLabel6);
-        jLabel6.setBounds(401, 15, 88, 20);
+        jLabel6.setBounds(290, 10, 88, 30);
 
         jLabel7.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jLabel7.setText("Time:");
@@ -1014,6 +1025,7 @@ public class mainFrame extends javax.swing.JFrame {
                     SimpleDateFormat date = new SimpleDateFormat("hh:mm");
                     String dateString = date.format(new Date()).toString();
                     lblTime.setText(dateString);
+                    setdbTime(dateString);
                     try {
                         Thread.sleep(1);
                     } catch (Exception e) {
