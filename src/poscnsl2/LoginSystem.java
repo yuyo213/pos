@@ -463,6 +463,7 @@ public class LoginSystem extends javax.swing.JFrame {
                 form.setVisible(true);
                 form.pack();
                 form.setLocationRelativeTo(null);
+                dispose();
                 setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
                 //JOptionPane.showMessageDialog(null,"Invalid email and pass","Login Error",2 );

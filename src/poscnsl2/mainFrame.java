@@ -876,6 +876,15 @@ public class mainFrame extends javax.swing.JFrame {
                 if (jtable.getModel().getValueAt(i, j).equals(lblName.getText())) {
                     int tb2 = (int) tb1.getValueAt(i, 2);
                     lblCurStock.setText(Integer.toString(tb2));
+                    if(lblCurStock.getText().equals("0")){
+                        JOptionPane.showMessageDialog(null, "No Stock Available");
+                        baddItem.setEnabled(false);
+                        tfID.setText("");
+                        tfItemCode.setText("");
+                       clear();
+                    }else{
+                         baddItem.setEnabled(true);
+                    }
                 }
             }
         }
