@@ -16,19 +16,19 @@ import java.awt.event.KeyEvent;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 import static poscnsl2.POSCnsl.con;
+import javax.swing.border.BevelBorder;
 
 /**
  *
  * @author Butaw
  */
-public class mainFrame extends javax.swing.JFrame {
+public class mainFrame extends javax.swing.JFrame implements testInter {
 
     public javax.swing.JTextField getTfQuantity() {
         return tfQuantity;
@@ -601,16 +601,10 @@ public class mainFrame extends javax.swing.JFrame {
 
     private void bOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOptionActionPerformed
         // OPTION
-        // panelChanger(PanelFrame, panelOption);
-         taskPanel task = new taskPanel();
-        PanelFrame.removeAll();
-           PanelFrame.repaint();
-        PanelFrame.revalidate();
-        PanelFrame.add(task);
-        PanelFrame.repaint();
-        PanelFrame.revalidate();
-      
-      //  PanelFrame.setSize(w,h);
+        //taskPanel task = new taskPanel();
+         panelChanger(PanelFrame, new taskPanel());
+
+        //  PanelFrame.setSize(w,h);
     }//GEN-LAST:event_bOptionActionPerformed
 
     private void bItemViewerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bItemViewerActionPerformed
@@ -675,7 +669,7 @@ public class mainFrame extends javax.swing.JFrame {
 
 //                 
             }
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
     }//GEN-LAST:event_tableSoldItemsMouseClicked
@@ -761,22 +755,15 @@ public class mainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_bDeleteActionPerformed
 
     private void lblExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblExitMouseClicked
-        int input = JOptionPane.showOptionDialog(null, "Do you want to exit?", "Exit",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE, null, null, null);
-        if (input == JOptionPane.OK_OPTION) {
-            System.exit(0);
-        }
+        closeWin();
     }//GEN-LAST:event_lblExitMouseClicked
 
     private void lblExitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblExitMouseEntered
-        lblExit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        lblExit.setForeground(Color.red);
+        aesthetic(lblExit, BevelBorder.LOWERED, Color.red);
     }//GEN-LAST:event_lblExitMouseEntered
 
     private void lblExitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblExitMouseExited
-        lblExit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        lblExit.setForeground(Color.black);
+        aesthetic(lblExit, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_lblExitMouseExited
 
     private void lblTotStockKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lblTotStockKeyReleased
@@ -791,11 +778,21 @@ public class mainFrame extends javax.swing.JFrame {
 
     private void tfQuantityKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfQuantityKeyReleased
         // TODO add your handling code here:
-        CurStock();
+      CurStock();
+       
         autoSum();
     }//GEN-LAST:event_tfQuantityKeyReleased
-
+    
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        closeWin();
+    }//GEN-LAST:event_formWindowClosing
+
+    private void ItemBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemBackActionPerformed
+        // TODO add your handling code here:
+        panelChanger(PanelFrame, MainPanel);
+      
+    }//GEN-LAST:event_ItemBackActionPerformed
+    private void closeWin() {
         int input = JOptionPane.showOptionDialog(null, "Do you want to exit?", "Exit",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, null, null);
@@ -804,14 +801,15 @@ public class mainFrame extends javax.swing.JFrame {
         } else {
             setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         }
-    }//GEN-LAST:event_formWindowClosing
+    }
 
-    private void ItemBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemBackActionPerformed
-        // TODO add your handling code here:
+    @Override
+    public void aesthetic(JLabel label, int checker, Color any) {
+        label.setBorder(javax.swing.BorderFactory.createBevelBorder(checker));
+        label.setForeground(any);
+    }
 
-        panelChanger(PanelFrame, MainPanel);
-    }//GEN-LAST:event_ItemBackActionPerformed
-         private int autoSum() {
+    private int autoSum() {
         int a, b, c;
 
         if (lblTotStock.getText().equals("") || tfQuantity.getText().equals("")
@@ -845,7 +843,7 @@ public class mainFrame extends javax.swing.JFrame {
 
     }
 
-    public void CurStock() {
+    private void CurStock() {
         DefaultTableModel dtm = (DefaultTableModel) tableSoldItems.getModel();
         if (dtm.getRowCount() == 0) {
             jtabs(tableStock);
@@ -854,7 +852,7 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    public void jtabs(JTable jtable) {
+    private void jtabs(JTable jtable) {
         DefaultTableModel tb1 = (DefaultTableModel) jtable.getModel();
         for (int i = 0; i < jtable.getRowCount(); i++) {
             for (int j = 0; j < jtable.getColumnCount(); j++) {
@@ -881,8 +879,7 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    public void updateTableStock() {
-
+    private void updateTableStock() {
         PreparedStatement pst;
         ResultSet rs;
         try {
@@ -896,7 +893,7 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    public void operators(char operator, String iName, String bItem) {
+    private void operators(char operator, String iName, String bItem) {
         DefaultTableModel tb1 = (DefaultTableModel) tableStock.getModel();
         for (int i = 0; i < tableStock.getRowCount(); i++) {
             for (int j = 0; j < tableStock.getColumnCount(); j++) {
@@ -931,7 +928,8 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void panelChanger(JPanel parentPanel, JPanel panel) {
+    @Override
+    public void panelChanger(JPanel parentPanel, JPanel panel) {
         parentPanel.removeAll();
         parentPanel.repaint();
         parentPanel.revalidate();
@@ -966,6 +964,7 @@ public class mainFrame extends javax.swing.JFrame {
                 lblPrice.setText(Float.toString(iPrice));
                 getTfQuantity().setText(rs.getString("itemQuantity"));
                 lblTotStock.setText(Integer.toString(rs.getInt("itemStock")));
+               
                 CurStock();
                 //  autoSum();
             } else if (flg == 0) {
@@ -978,7 +977,8 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void clear() {
+    @Override
+    public void clear() {
         //Thread.sleep(150);
         lblName.setText("");
         lblPrice.setText("");
@@ -1031,16 +1031,14 @@ public class mainFrame extends javax.swing.JFrame {
         bOption.setEnabled(false);
     }
 
-   
-
-    public void userLog(String userActive) {
+  /*  private void userLog(String userActive) {
 
         PreparedStatement pst;
         ResultSet rs;
         String query = "INSERT into tableofTrans \n"
                 + "(Seller) SELECT uName from userLogin \n"
                 + "WHERE uName='" + userActive + "'";
-    }
+    }*/
 
     /**
      * @param args the command line arguments

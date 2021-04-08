@@ -5,7 +5,7 @@
  */
 package poscnsl2;
 
-
+import java.awt.Color;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -13,12 +13,16 @@ import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import static poscnsl2.POSCnsl.con;
+import javax.swing.border.BevelBorder;
+
 /**
  *
  * @author Butaw
  */
-public class LoginSystem extends javax.swing.JFrame {
+public class LoginSystem extends javax.swing.JFrame implements testInter {
 
     /**
      * @return the mod
@@ -40,21 +44,17 @@ public class LoginSystem extends javax.swing.JFrame {
     protected String mod = "Seller";
 
     public LoginSystem() {
-        
+
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);
-        remove(createPanel);
-        repaint();
-        revalidate();
-        add(loginPanel);
-        repaint();
-        revalidate();
+        panelChanger(mainPanel, loginPanel);
         lblInvalid.hide();
         lblcapsWarning.hide();
-        
+
     }
 
+    @Override
     public void clear() {
         tfCreateUser.setText("");
         tfName.setText("");
@@ -73,15 +73,7 @@ public class LoginSystem extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        loginPanel = new javax.swing.JPanel();
-        bLogin = new javax.swing.JButton();
-        lblCreate = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        tfUser = new javax.swing.JTextField();
-        lblInvalid = new javax.swing.JLabel();
-        pfPass = new javax.swing.JPasswordField();
-        lblcapsWarning = new javax.swing.JLabel();
+        mainPanel = new javax.swing.JPanel();
         createPanel = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -93,76 +85,21 @@ public class LoginSystem extends javax.swing.JFrame {
         pfConfirm = new javax.swing.JPasswordField();
         tfName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        loginPanel = new javax.swing.JPanel();
+        bLogin = new javax.swing.JButton();
+        lblCreate = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        tfUser = new javax.swing.JTextField();
+        lblInvalid = new javax.swing.JLabel();
+        pfPass = new javax.swing.JPasswordField();
+        lblcapsWarning = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        loginPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        mainPanel.setLayout(new java.awt.CardLayout());
 
-        bLogin.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        bLogin.setText("Login");
-        bLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bLoginActionPerformed(evt);
-            }
-        });
-        loginPanel.add(bLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 160, 130, 33));
-
-        lblCreate.setBackground(new java.awt.Color(255, 255, 255));
-        lblCreate.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        lblCreate.setForeground(new java.awt.Color(51, 51, 255));
-        lblCreate.setText("Create an Account(Seller)");
-        lblCreate.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblCreateMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblCreateMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblCreateMouseExited(evt);
-            }
-        });
-        loginPanel.add(lblCreate, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, -1, -1));
-
-        jLabel2.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        jLabel2.setText("Username:");
-        loginPanel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, 80, 30));
-
-        jLabel3.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        jLabel3.setText("Password:");
-        loginPanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 80, 30));
-
-        tfUser.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        loginPanel.add(tfUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, 120, 30));
-
-        lblInvalid.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        lblInvalid.setForeground(new java.awt.Color(255, 51, 51));
-        lblInvalid.setText("Incorrect! Check Username and Password");
-        loginPanel.add(lblInvalid, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
-
-        pfPass.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        pfPass.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                pfPassFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                pfPassFocusLost(evt);
-            }
-        });
-        pfPass.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                pfPassMouseClicked(evt);
-            }
-        });
-        pfPass.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                pfPassKeyReleased(evt);
-            }
-        });
-        loginPanel.add(pfPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 120, 30));
-
-        lblcapsWarning.setText("Caps Lock On ⚠");
-        loginPanel.add(lblcapsWarning, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 110, 120, 30));
+        createPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel5.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jLabel5.setText("Username:");
@@ -232,12 +169,12 @@ public class LoginSystem extends javax.swing.JFrame {
                                 .addComponent(pfCreatePass)
                                 .addComponent(tfCreateUser)
                                 .addComponent(pfConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(98, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
         createPanelLayout.setVerticalGroup(
             createPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(createPanelLayout.createSequentialGroup()
-                .addContainerGap(45, Short.MAX_VALUE)
+                .addGap(19, 19, 19)
                 .addGroup(createPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -255,24 +192,97 @@ public class LoginSystem extends javax.swing.JFrame {
                     .addComponent(pfConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(bCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(4, 4, 4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
+
+        mainPanel.add(createPanel, "card3");
+
+        loginPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        loginPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        bLogin.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        bLogin.setText("Login");
+        bLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bLoginActionPerformed(evt);
+            }
+        });
+        loginPanel.add(bLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 170, 130, 33));
+
+        lblCreate.setBackground(new java.awt.Color(255, 255, 255));
+        lblCreate.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        lblCreate.setForeground(new java.awt.Color(51, 51, 255));
+        lblCreate.setText("Create an Account(Seller)");
+        lblCreate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCreateMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblCreateMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblCreateMouseExited(evt);
+            }
+        });
+        loginPanel.add(lblCreate, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 240, -1, -1));
+
+        jLabel2.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        jLabel2.setText("Username:");
+        loginPanel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, 80, 30));
+
+        jLabel3.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        jLabel3.setText("Password:");
+        loginPanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, 80, 30));
+
+        tfUser.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        loginPanel.add(tfUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, 120, 30));
+
+        lblInvalid.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        lblInvalid.setForeground(new java.awt.Color(255, 51, 51));
+        lblInvalid.setText("Incorrect! Check Username and Password");
+        loginPanel.add(lblInvalid, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, -1, -1));
+
+        pfPass.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        pfPass.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                pfPassFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                pfPassFocusLost(evt);
+            }
+        });
+        pfPass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pfPassMouseClicked(evt);
+            }
+        });
+        pfPass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                pfPassKeyReleased(evt);
+            }
+        });
+        loginPanel.add(pfPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 120, 30));
+
+        lblcapsWarning.setText("Caps Lock On ⚠");
+        loginPanel.add(lblcapsWarning, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 120, 120, 30));
+
+        mainPanel.add(loginPanel, "card2");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(loginPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 420, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(createPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(mainPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(loginPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 326, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(createPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -299,12 +309,7 @@ public class LoginSystem extends javax.swing.JFrame {
                     pst.close();
                     JOptionPane.showMessageDialog(null, "Created Successfully!");
                     clear();
-                    remove(createPanel);
-                    repaint();
-                    revalidate();
-                    add(loginPanel);
-                    repaint();
-                    revalidate();
+                    panelChanger(mainPanel, loginPanel);
                     lblInvalid.hide();
                     lblCreate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
                 } catch (HeadlessException | SQLException e) {
@@ -337,29 +342,20 @@ public class LoginSystem extends javax.swing.JFrame {
 
             }
         } catch (SQLException ex) {
-          JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, ex);
         }
         return user_exist;
     }
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-        remove(createPanel);
-        repaint();
-        revalidate();
-        add(loginPanel);
-        repaint();
-        revalidate();
+         panelChanger(mainPanel, loginPanel);
         lblInvalid.hide();
         lblCreate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void lblCreateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCreateMouseClicked
-        jLabel7.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        remove(loginPanel);
-        repaint();
-        revalidate();
-        add(createPanel);
-        repaint();
-        revalidate();
+        aesthetic(jLabel7, BevelBorder.RAISED, Color.black);
+         panelChanger(mainPanel, createPanel);
+
 
     }//GEN-LAST:event_lblCreateMouseClicked
 
@@ -418,11 +414,11 @@ public class LoginSystem extends javax.swing.JFrame {
     }//GEN-LAST:event_pfPassMouseClicked
 
     private void jLabel7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseEntered
-        jLabel7.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        aesthetic(jLabel7, BevelBorder.LOWERED, Color.red);
     }//GEN-LAST:event_jLabel7MouseEntered
 
     private void jLabel7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseExited
-        jLabel7.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        aesthetic(jLabel7, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_jLabel7MouseExited
     private void capsLock() {
         boolean isOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
@@ -433,7 +429,7 @@ public class LoginSystem extends javax.swing.JFrame {
         }
     }
 
-    public boolean checkPos(String input) {
+    private boolean checkPos(String input) {
         PreparedStatement pst;
         ResultSet rs;
         String pos, uID;
@@ -471,7 +467,7 @@ public class LoginSystem extends javax.swing.JFrame {
             lblInvalid.show();
 
         } catch (SQLException ex) {
-           JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, ex);
         }
         return user_exist;
     }
@@ -526,6 +522,7 @@ public class LoginSystem extends javax.swing.JFrame {
     private javax.swing.JLabel lblInvalid;
     private javax.swing.JLabel lblcapsWarning;
     private javax.swing.JPanel loginPanel;
+    private javax.swing.JPanel mainPanel;
     private javax.swing.JPasswordField pfConfirm;
     private javax.swing.JPasswordField pfCreatePass;
     private javax.swing.JPasswordField pfPass;
@@ -533,4 +530,22 @@ public class LoginSystem extends javax.swing.JFrame {
     private javax.swing.JTextField tfName;
     private javax.swing.JTextField tfUser;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void panelChanger(JPanel parentPanel, JPanel panel) {
+
+        parentPanel.removeAll();
+        parentPanel.repaint();
+        parentPanel.revalidate();
+        parentPanel.add(panel);
+        parentPanel.repaint();
+        parentPanel.revalidate();
+
+    }
+
+    @Override
+    public void aesthetic(JLabel label, int checker, Color any) {
+        label.setBorder(javax.swing.BorderFactory.createBevelBorder(checker));
+        label.setForeground(any);
+    }
 }

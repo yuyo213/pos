@@ -5,13 +5,17 @@
  */
 package poscnsl2;
 
+import java.awt.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
+
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 import static poscnsl2.POSCnsl.con;
@@ -22,7 +26,7 @@ import static poscnsl2.mainFrame.MainPanel;
  *
  * @author Butaw
  */
-public class taskPanel extends javax.swing.JPanel {
+public class taskPanel extends javax.swing.JPanel implements testInter {
 
     /**
      * Creates new form optionPanel
@@ -515,20 +519,22 @@ public class taskPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lblBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBackMouseClicked
-    PanelFrame.removeAll();
-    PanelFrame.repaint();
-    PanelFrame.revalidate();
-    PanelFrame.add(MainPanel);
-    PanelFrame.repaint();
-    PanelFrame.revalidate();
+        PanelFrame.removeAll();
+        PanelFrame.repaint();
+        PanelFrame.revalidate();
+        PanelFrame.add(MainPanel);
+        PanelFrame.repaint();
+        PanelFrame.revalidate();
     }//GEN-LAST:event_lblBackMouseClicked
 
     private void lblBackMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBackMouseEntered
         lblBack.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        aesthetic(lblBack, BevelBorder.LOWERED, Color.red);
     }//GEN-LAST:event_lblBackMouseEntered
 
     private void lblBackMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBackMouseExited
         lblBack.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        aesthetic(lblBack, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_lblBackMouseExited
 
     private void jMonthChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jMonthChooser1PropertyChange
@@ -556,21 +562,20 @@ public class taskPanel extends javax.swing.JPanel {
         PreparedStatement ps;
         ResultSet rs;
         if (tfAddItemCode.getText().equals("") || tfAddItemName.getText().equals("") || tfAddItemPrice.getText().equals("")
-            || tfAddItemQuan.getText().equals("") || tfAddItemStock.getText().equals("")) {
+                || tfAddItemQuan.getText().equals("") || tfAddItemStock.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Input Somethin first");
         } else {
             if (!checkItem(tfAddItemName.getText())) { // check item if its already exist
                 String query1 = "insert into itemLists(code,itemName,itemQuantity,itemPrice,itemStock)values('" + tfAddItemCode.getText() + "','" + tfAddItemName.getText()
-                + "','" + tfAddItemQuan.getText() + "','" + tfAddItemPrice.getText() + "','" + tfAddItemStock.getText() + "')";
+                        + "','" + tfAddItemQuan.getText() + "','" + tfAddItemPrice.getText() + "','" + tfAddItemStock.getText() + "')";
                 try {
                     ps = con.prepareStatement(query1);
 
                     int i = ps.executeUpdate();
                     if (i >= 1) {
                         JOptionPane.showMessageDialog(null, tfAddItemName.getText() + " Data Saved!");//if 1
-                        updateAdd();
-                       
-                        optPanelClear();
+                        updateItems();
+                        clear();
                     } else {
                         JOptionPane.showMessageDialog(null, tfAddItemName.getText() + "Failed to Save!");//else 1
 
@@ -586,7 +591,7 @@ public class taskPanel extends javax.swing.JPanel {
         PreparedStatement ps;
 
         if (tfAddItemName.getText().equals("") || tfAddItemCode.getText().equals("") || tfAddItemPrice.getText().equals("")
-            || tfAddItemQuan.getText().equals("") || tfAddItemStock.getText().equals("")) {
+                || tfAddItemQuan.getText().equals("") || tfAddItemStock.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Please Complete", "Error", 2);
         } else {
 
@@ -601,8 +606,8 @@ public class taskPanel extends javax.swing.JPanel {
                 ps.setString(5, tfAddItemCode.getText());
                 ps.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Item Updated");
-                updateAdd();
-                optPanelClear();
+                updateItems();
+                clear();
                 /*int input = JOptionPane.showOptionDialog(null, "Item Updated", "New Account",
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.INFORMATION_MESSAGE, null, null, null);
@@ -621,9 +626,9 @@ public class taskPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         // TODO add your handling code here:
         PreparedStatement pst;
-        if(tfAddItemCode.getText().equals("")){
+        if (tfAddItemCode.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "No item Selected");
-        }else{
+        } else {
             String query = "DELETE FROM `itemLists` WHERE `code` ='" + tfAddItemCode.getText() + "'";
             //                String query = "delete from client_info where id=?";
             try {
@@ -631,8 +636,8 @@ public class taskPanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Item Deleted");
                 pst.executeUpdate();
                 pst.close();
-                updateAdd();
-                optPanelClear();
+                updateItems();
+                clear();
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex);
             }
@@ -648,12 +653,14 @@ public class taskPanel extends javax.swing.JPanel {
 
     private void lblViewTabMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblViewTabMouseEntered
         // TODO add your handling code here:
-        lblViewTab.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+
+        aesthetic(lblViewTab, BevelBorder.LOWERED, Color.red);
     }//GEN-LAST:event_lblViewTabMouseEntered
 
     private void lblViewTabMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblViewTabMouseExited
         // TODO add your handling code here:
-        lblViewTab.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        aesthetic(lblViewTab, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_lblViewTabMouseExited
 
     private void lblCrudMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCrudMouseClicked
@@ -661,17 +668,19 @@ public class taskPanel extends javax.swing.JPanel {
         //crud
         panelChanger(panelTabs, crudPanel);
         tfAddItemCode.requestFocus();
-        updateAdd();
+        updateItems();
     }//GEN-LAST:event_lblCrudMouseClicked
 
     private void lblCrudMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCrudMouseEntered
         // TODO add your handling code here:
-        lblCrud.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+
+        aesthetic(lblCrud, BevelBorder.LOWERED, Color.red);
     }//GEN-LAST:event_lblCrudMouseEntered
 
     private void lblCrudMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCrudMouseExited
         // TODO add your handling code here:
-        lblCrud.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        aesthetic(lblCrud, BevelBorder.RAISED, Color.black);
+
     }//GEN-LAST:event_lblCrudMouseExited
 
     private void lblTransactionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTransactionsMouseClicked
@@ -681,12 +690,12 @@ public class taskPanel extends javax.swing.JPanel {
 
     private void lblTransactionsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTransactionsMouseEntered
         // TODO add your handling code here:
-        lblTransactions.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        aesthetic(lblTransactions, BevelBorder.LOWERED, Color.red);
     }//GEN-LAST:event_lblTransactionsMouseEntered
 
     private void lblTransactionsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTransactionsMouseExited
         // TODO add your handling code here:
-        lblTransactions.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        aesthetic(lblTransactions, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_lblTransactionsMouseExited
 
     private void lblaccManagerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblaccManagerMouseClicked
@@ -698,13 +707,16 @@ public class taskPanel extends javax.swing.JPanel {
     private void lblaccManagerMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblaccManagerMouseEntered
         // TODO add your handling code here:
         lblaccManager.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        aesthetic(lblaccManager, BevelBorder.LOWERED, Color.red);
     }//GEN-LAST:event_lblaccManagerMouseEntered
 
     private void lblaccManagerMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblaccManagerMouseExited
         // TODO add your handling code here:
         lblaccManager.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        aesthetic(lblaccManager, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_lblaccManagerMouseExited
- private void panelChanger(JPanel parentPanel, JPanel panel) {
+
+    public void panelChanger(JPanel parentPanel, JPanel panel) {
         parentPanel.removeAll();
         parentPanel.repaint();
         parentPanel.revalidate();
@@ -712,30 +724,14 @@ public class taskPanel extends javax.swing.JPanel {
         parentPanel.repaint();
         parentPanel.revalidate();
     }
-    private void optPanelClear() {
-        lblAddID.setText("");
-        tfAddItemCode.setText("");
-        tfAddItemName.setText("");
-        tfAddItemPrice.setText("");
-        tfAddItemStock.setText("");
-        tfAddItemQuan.setText("");
-    }  
-    private void updateAdd() {
-        try {
 
-            PreparedStatement pst;
-            ResultSet rs;
-            //   String sql = "select * from itemLists";
-            String sql = "select ID,itemName as Item,code as Code,itemQuantity as Quantity,itemPrice as Price,itemStock as Stock  from itemLists";
-            pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-            tableAddItem.setModel(DbUtils.resultSetToTableModel(rs));
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
+    @Override
+    public void aesthetic(JLabel label, int checker, Color any) {
+        label.setBorder(javax.swing.BorderFactory.createBevelBorder(checker));
+        label.setForeground(any);
     }
-public boolean checkItem(String input) {
+
+    public boolean checkItem(String input) {
         PreparedStatement pst;
         ResultSet rs;
         boolean user_exist = false;
@@ -796,4 +792,31 @@ public boolean checkItem(String input) {
     private javax.swing.JTextField tfAddItemQuan;
     private javax.swing.JTextField tfAddItemStock;
     // End of variables declaration//GEN-END:variables
+
+    private void updateItems() {
+        try {
+
+            PreparedStatement pst;
+            ResultSet rs;
+            //   String sql = "select * from itemLists";
+            String sql = "select ID,itemName as Item,code as Code,itemQuantity as Quantity,itemPrice as Price,itemStock as Stock  from itemLists";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+            tableAddItem.setModel(DbUtils.resultSetToTableModel(rs));
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+
+    @Override
+    public void clear() {
+        lblAddID.setText("");
+        tfAddItemCode.setText("");
+        tfAddItemName.setText("");
+        tfAddItemPrice.setText("");
+        tfAddItemStock.setText("");
+        tfAddItemQuan.setText("");
+    }
+
 }
