@@ -5,6 +5,9 @@
  */
 package poscnsl2;
 
+import java.sql.Connection;
+
+
 /**
  *
  * @author Butaw
@@ -14,6 +17,7 @@ public class POSCnsl {
     /**
      * @param args the command line arguments
      */
+    static public Connection con = My_Connection.dbConnection();
     public static void main(String[] args) {
         
        //new mainFrame().setVisible(true);

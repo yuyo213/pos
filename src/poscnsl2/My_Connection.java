@@ -21,7 +21,7 @@ public class My_Connection {
             Class.forName("org.sqlite.JDBC");
             Connection con = DriverManager.getConnection("jdbc:sqlite:db.db");
             //Connection cons=DriverManager.getConnection("jdbc:sqlite:data2.db");
-            // System.err.println("Connection Successful!");
+             System.err.println("Connection Successful!");
 //					JOptionPane.showMessageDialog(null, "Connection Succesful");
             return con;
         } catch (Exception e) {

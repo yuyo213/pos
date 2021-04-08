@@ -11,15 +11,18 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.awt.event.KeyEvent;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
+import static poscnsl2.POSCnsl.con;
 
 /**
  *
@@ -34,17 +37,18 @@ public class mainFrame extends javax.swing.JFrame {
     public void setTfQuantity(javax.swing.JTextField tfQuantity) {
         this.tfQuantity = tfQuantity;
     }
-    Connection con = My_Connection.dbConnection();
+
     int w = 720, h = 740;
-    OptionPanel optP = new OptionPanel();
+
     Date d = new Date();
     SimpleDateFormat dbD = new SimpleDateFormat("MM-dd-yyyy");
     private final String dbDate = dbD.format(d);
 
     public mainFrame() {
+
         initComponents();
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM/dd/yyyy");
-      //  SimpleDateFormat stf = new SimpleDateFormat("HH:mm:ss");
+        //  SimpleDateFormat stf = new SimpleDateFormat("HH:mm:ss");
         lblDate.setText(sdf.format(d));
         time();
         setLocationRelativeTo(null);
@@ -75,7 +79,7 @@ public class mainFrame extends javax.swing.JFrame {
         MainPanel = new javax.swing.JPanel();
         tablePanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableSoldItems = new javax.swing.JTable();
         opPanel = new javax.swing.JPanel();
         baddItem = new javax.swing.JButton();
         bcashOut = new javax.swing.JButton();
@@ -116,7 +120,6 @@ public class mainFrame extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tableStock = new javax.swing.JTable();
         ItemBack = new javax.swing.JButton();
-        panelOption = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -130,7 +133,7 @@ public class mainFrame extends javax.swing.JFrame {
 
         tablePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Item"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableSoldItems.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -146,13 +149,13 @@ public class mainFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableSoldItems.getTableHeader().setReorderingAllowed(false);
+        tableSoldItems.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                tableSoldItemsMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableSoldItems);
 
         javax.swing.GroupLayout tablePanelLayout = new javax.swing.GroupLayout(tablePanel);
         tablePanel.setLayout(tablePanelLayout);
@@ -472,7 +475,7 @@ public class mainFrame extends javax.swing.JFrame {
             .addGroup(MainPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pricePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
+                    .addComponent(pricePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 702, Short.MAX_VALUE)
                     .addGroup(MainPanelLayout.createSequentialGroup()
                         .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(searchPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -489,7 +492,7 @@ public class mainFrame extends javax.swing.JFrame {
             MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pricePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                .addComponent(pricePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(MainPanelLayout.createSequentialGroup()
@@ -529,7 +532,7 @@ public class mainFrame extends javax.swing.JFrame {
         tablePanel1.setLayout(tablePanel1Layout);
         tablePanel1Layout.setHorizontalGroup(
             tablePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
         );
         tablePanel1Layout.setVerticalGroup(
             tablePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -561,36 +564,23 @@ public class mainFrame extends javax.swing.JFrame {
                 .addGroup(itemViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tablePanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ItemBack))
-                .addContainerGap(556, Short.MAX_VALUE))
+                .addContainerGap(558, Short.MAX_VALUE))
         );
 
         PanelFrame.add(itemViewer, "card4");
 
         getContentPane().add(PanelFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        javax.swing.GroupLayout panelOptionLayout = new javax.swing.GroupLayout(panelOption);
-        panelOption.setLayout(panelOptionLayout);
-        panelOptionLayout.setHorizontalGroup(
-            panelOptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 720, Short.MAX_VALUE)
-        );
-        panelOptionLayout.setVerticalGroup(
-            panelOptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(panelOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void bResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bResetActionPerformed
         // TODO add your handling code here:
-        int input = JOptionPane.showOptionDialog(null, "New Transaction?", "Option",
+        int input = JOptionPane.showOptionDialog(null, "New Transaction?", "Saving Transaction",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, null, null);
         if (input == JOptionPane.OK_OPTION) {
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            DefaultTableModel model = (DefaultTableModel) tableSoldItems.getModel();
             // model.getDataVector().removeAllElements();
             model.fireTableDataChanged();
             while (model.getRowCount() > 0) {
@@ -611,22 +601,21 @@ public class mainFrame extends javax.swing.JFrame {
 
     private void bOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOptionActionPerformed
         // OPTION
-        PanelFrame.hide();
-        panelOption.add(optP);
-        panelOption.repaint();
-        panelOption.revalidate();
-        panelOption.show();
-        optP.setBounds(0, 0, w, h);
+        // panelChanger(PanelFrame, panelOption);
+         taskPanel task = new taskPanel();
+        PanelFrame.removeAll();
+           PanelFrame.repaint();
+        PanelFrame.revalidate();
+        PanelFrame.add(task);
+        PanelFrame.repaint();
+        PanelFrame.revalidate();
+      
+      //  PanelFrame.setSize(w,h);
     }//GEN-LAST:event_bOptionActionPerformed
 
     private void bItemViewerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bItemViewerActionPerformed
-        PanelFrame.removeAll();
-        PanelFrame.repaint();
-        PanelFrame.revalidate();
-        PanelFrame.add(itemViewer);
-        PanelFrame.repaint();
-        PanelFrame.revalidate();
 
+        panelChanger(PanelFrame, itemViewer);
     }//GEN-LAST:event_bItemViewerActionPerformed
 
     private void bcashOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bcashOutActionPerformed
@@ -666,11 +655,11 @@ public class mainFrame extends javax.swing.JFrame {
         numberonly(evt);
     }//GEN-LAST:event_tfItemCodeKeyTyped
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+    private void tableSoldItemsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableSoldItemsMouseClicked
         // table clicked
 
-        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
-        int selectedRowIndex = jTable1.getSelectedRow();
+        DefaultTableModel dtm = (DefaultTableModel) tableSoldItems.getModel();
+        int selectedRowIndex = tableSoldItems.getSelectedRow();
         String name = (String) dtm.getValueAt(selectedRowIndex, 0);
 
         try {
@@ -689,7 +678,7 @@ public class mainFrame extends javax.swing.JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_tableSoldItemsMouseClicked
 
     private void tfItemCodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfItemCodeKeyReleased
         // relase key pressed / type item code (real)
@@ -717,8 +706,8 @@ public class mainFrame extends javax.swing.JFrame {
 
     private void baddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baddItemActionPerformed
         //adding the item
-        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
-        int row = jTable1.getRowCount();
+        DefaultTableModel dtm = (DefaultTableModel) tableSoldItems.getModel();
+        int row = tableSoldItems.getRowCount();
         if (lblName.getText().equals("") || getTfQuantity().getText().equals("")
                 || lblPrice.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "No selected item");
@@ -728,11 +717,11 @@ public class mainFrame extends javax.swing.JFrame {
             Double resultPrice = numPrice * numQuantity;
             dtm.addRow(new Object[]{lblName.getText(), resultPrice,
                 getTfQuantity().getText(), dbDate});// put object
-            jTable1.changeSelection(row, 1, false, false);
+            tableSoldItems.changeSelection(row, 1, false, false);
             //jTable1.setRowSelectionAllowed(true);
             String itemName = (String) dtm.getValueAt(row, 0);
             String bItem = (String) dtm.getValueAt(row, 2);
-            test();
+            // test();
             char minus = '-';
             operators(minus, itemName, bItem);
         }
@@ -743,23 +732,23 @@ public class mainFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_baddItemActionPerformed
     public void test() {
-        int row = jTable1.getSelectedRow();
+        int row = tableSoldItems.getSelectedRow();
         int srow = tableStock.getRowCount();
         for (int i = 0; i < srow; i++) {
             String name = (String) tableStock.getValueAt(i, 1);
-            if (jTable1.getValueAt(row, 0).equals(name)) {
+            if (tableSoldItems.getValueAt(row, 0).equals(name)) {
 
             }
         }
     }
     private void bDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDeleteActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
-        int i = jTable1.getSelectedRow();
+        DefaultTableModel dtm = (DefaultTableModel) tableSoldItems.getModel();
+        int i = tableSoldItems.getSelectedRow();
         if (i >= 0) {
 
-            String iName = (String) jTable1.getValueAt(i, 0);
-            String Squant = (String) jTable1.getValueAt(i, 2);
+            String iName = (String) tableSoldItems.getValueAt(i, 0);
+            String Squant = (String) tableSoldItems.getValueAt(i, 2);
             char op = '+';
             operators(op, iName, Squant);
 
@@ -819,14 +808,10 @@ public class mainFrame extends javax.swing.JFrame {
 
     private void ItemBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemBackActionPerformed
         // TODO add your handling code here:
-        PanelFrame.removeAll();
-        PanelFrame.repaint();
-        PanelFrame.revalidate();
-        PanelFrame.add(MainPanel);
-        PanelFrame.repaint();
-        PanelFrame.revalidate();
+
+        panelChanger(PanelFrame, MainPanel);
     }//GEN-LAST:event_ItemBackActionPerformed
-    private int autoSum() {
+         private int autoSum() {
         int a, b, c;
 
         if (lblTotStock.getText().equals("") || tfQuantity.getText().equals("")
@@ -861,7 +846,7 @@ public class mainFrame extends javax.swing.JFrame {
     }
 
     public void CurStock() {
-        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel dtm = (DefaultTableModel) tableSoldItems.getModel();
         if (dtm.getRowCount() == 0) {
             jtabs(tableStock);
         } else {
@@ -876,14 +861,14 @@ public class mainFrame extends javax.swing.JFrame {
                 if (jtable.getModel().getValueAt(i, j).equals(lblName.getText())) {
                     int tb2 = (int) tb1.getValueAt(i, 2);
                     lblCurStock.setText(Integer.toString(tb2));
-                    if(lblCurStock.getText().equals("0")){
+                    if (lblCurStock.getText().equals("0")) {
                         JOptionPane.showMessageDialog(null, "No Stock Available");
                         baddItem.setEnabled(false);
                         tfID.setText("");
                         tfItemCode.setText("");
-                       clear();
-                    }else{
-                         baddItem.setEnabled(true);
+                        clear();
+                    } else {
+                        baddItem.setEnabled(true);
                     }
                 }
             }
@@ -896,7 +881,8 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void updateTableStock() {
+    public void updateTableStock() {
+
         PreparedStatement pst;
         ResultSet rs;
         try {
@@ -905,7 +891,7 @@ public class mainFrame extends javax.swing.JFrame {
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
             tableStock.setModel(DbUtils.resultSetToTableModel(rs));
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
@@ -945,17 +931,27 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    private int getSum() {
-        double tot = 0;
-        for (int i = 0; i < jTable1.getRowCount(); i++) {
-            tot = tot + Double.parseDouble(jTable1.getValueAt(i, 1).toString());
-        }
-        lblTotal.setText(Double.toString(tot));
+    private void panelChanger(JPanel parentPanel, JPanel panel) {
+        parentPanel.removeAll();
+        parentPanel.repaint();
+        parentPanel.revalidate();
+        parentPanel.add(panel);
+        parentPanel.repaint();
+        parentPanel.revalidate();
+    }
 
-        return (int) tot;
+    private float getSum() {
+        float tot = 0;
+        for (int i = 0; i < tableSoldItems.getRowCount(); i++) {
+            tot = tot + Float.parseFloat(tableSoldItems.getValueAt(i, 1).toString());
+        }
+        lblTotal.setText(Float.toString(tot));
+
+        return tot;
     }
 
     private void idCode(String value, String sText) {
+
         PreparedStatement pst;
         ResultSet rs;
         int flg = 0;
@@ -965,9 +961,9 @@ public class mainFrame extends javax.swing.JFrame {
             pst.setString(1, sText);
             rs = pst.executeQuery();
             if (rs.next() && flg == 0) {
-                int iPrice = rs.getInt("itemPrice");
+                float iPrice = rs.getFloat("itemPrice");
                 lblName.setText(rs.getString("itemName"));
-                lblPrice.setText(Integer.toString(iPrice));
+                lblPrice.setText(Float.toString(iPrice));
                 getTfQuantity().setText(rs.getString("itemQuantity"));
                 lblTotStock.setText(Integer.toString(rs.getInt("itemStock")));
                 CurStock();
@@ -1035,7 +1031,10 @@ public class mainFrame extends javax.swing.JFrame {
         bOption.setEnabled(false);
     }
 
+   
+
     public void userLog(String userActive) {
+
         PreparedStatement pst;
         ResultSet rs;
         String query = "INSERT into tableofTrans \n"
@@ -1074,7 +1073,7 @@ public class mainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ItemBack;
-    private javax.swing.JPanel MainPanel;
+    public static javax.swing.JPanel MainPanel;
     public static javax.swing.JPanel PanelFrame;
     private javax.swing.JButton bDelete;
     private javax.swing.JButton bItemViewer;
@@ -1098,7 +1097,6 @@ public class mainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblCurStock;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblExchange;
@@ -1110,11 +1108,11 @@ public class mainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblTotal;
     private javax.swing.JLabel lblTransaction;
     private javax.swing.JPanel opPanel;
-    public static javax.swing.JPanel panelOption;
     private javax.swing.JPanel pricePanel;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JPanel tablePanel1;
+    private javax.swing.JTable tableSoldItems;
     private javax.swing.JTable tableStock;
     private javax.swing.JTextField tfID;
     private javax.swing.JTextField tfItemCode;

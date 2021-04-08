@@ -5,14 +5,15 @@
  */
 package poscnsl2;
 
+
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import static poscnsl2.POSCnsl.con;
 /**
  *
  * @author Butaw
@@ -36,10 +37,10 @@ public class LoginSystem extends javax.swing.JFrame {
     /**
      * Creates new form LoginSystem
      */
-     Connection con = My_Connection.dbConnection();
     protected String mod = "Seller";
 
     public LoginSystem() {
+        
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);
@@ -51,7 +52,7 @@ public class LoginSystem extends javax.swing.JFrame {
         revalidate();
         lblInvalid.hide();
         lblcapsWarning.hide();
-
+        
     }
 
     public void clear() {
@@ -336,7 +337,7 @@ public class LoginSystem extends javax.swing.JFrame {
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(LoginSystem.class.getName()).log(Level.SEVERE, null, ex);
+          JOptionPane.showMessageDialog(null, ex);
         }
         return user_exist;
     }
@@ -448,12 +449,11 @@ public class LoginSystem extends javax.swing.JFrame {
             if (rs.next()) {
                 user_exist = true;
                 uID = rs.getString("ID");
-                
                 pos = rs.getString("uPos");
                 if (input.equals(uID)) {
                     if (pos.equals("Admin")) {
                         System.out.println("WOOOOOOW you're an admin");
-                        
+
                     } else {
                         System.out.println("WOOOOOOW you're an seller");
                         form.seller();
@@ -471,7 +471,7 @@ public class LoginSystem extends javax.swing.JFrame {
             lblInvalid.show();
 
         } catch (SQLException ex) {
-            Logger.getLogger(LoginSystem.class.getName()).log(Level.SEVERE, null, ex);
+           JOptionPane.showMessageDialog(null, ex);
         }
         return user_exist;
     }
