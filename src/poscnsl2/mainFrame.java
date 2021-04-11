@@ -16,19 +16,19 @@ import java.awt.event.KeyEvent;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
-import static poscnsl2.POSCnsl.con;
 import javax.swing.border.BevelBorder;
-
+import static poscnsl2.POSCnsl.panelChanger;
+import static poscnsl2.POSCnsl.aesthetic;
+import static poscnsl2.LoginSystem.con;
 /**
  *
  * @author Butaw
  */
-public class mainFrame extends javax.swing.JFrame implements testInter {
+public class mainFrame extends javax.swing.JFrame {
 
     public javax.swing.JTextField getTfQuantity() {
         return tfQuantity;
@@ -38,17 +38,29 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
         this.tfQuantity = tfQuantity;
     }
 
-    int w = 720, h = 740;
+    /**
+     * get MainPanel and PanelFrame
+     *
+     * @return
+     */
+    public JPanel getMainPanel() {
+        return MainPanel;
+    }
 
+    public JPanel getFramePanel() {
+        return PanelFrame;
+    }
+   
     Date d = new Date();
     SimpleDateFormat dbD = new SimpleDateFormat("MM-dd-yyyy");
     private final String dbDate = dbD.format(d);
 
-    public mainFrame() {
+    static private mainFrame main = new mainFrame();
+
+    private mainFrame() {
 
         initComponents();
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM/dd/yyyy");
-        //  SimpleDateFormat stf = new SimpleDateFormat("HH:mm:ss");
         lblDate.setText(sdf.format(d));
         time();
         setLocationRelativeTo(null);
@@ -57,7 +69,10 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
         transIDs();
         updateTableStock();
         bReset.setEnabled(false);
+    }
 
+    public static mainFrame getInstance() {
+        return main;
     }
 
     public void ButtonSwitch() {
@@ -602,8 +617,8 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
     private void bOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOptionActionPerformed
         // OPTION
         //taskPanel task = new taskPanel();
-         panelChanger(PanelFrame, new taskPanel());
-
+        taskPanel task = taskPanel.getInstance();
+        panelChanger(PanelFrame, task);
         //  PanelFrame.setSize(w,h);
     }//GEN-LAST:event_bOptionActionPerformed
 
@@ -669,6 +684,7 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
 
 //                 
             }
+            rs.close();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -778,11 +794,11 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
 
     private void tfQuantityKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfQuantityKeyReleased
         // TODO add your handling code here:
-      CurStock();
-       
+        CurStock();
+
         autoSum();
     }//GEN-LAST:event_tfQuantityKeyReleased
-    
+
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         closeWin();
     }//GEN-LAST:event_formWindowClosing
@@ -790,7 +806,7 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
     private void ItemBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemBackActionPerformed
         // TODO add your handling code here:
         panelChanger(PanelFrame, MainPanel);
-      
+
     }//GEN-LAST:event_ItemBackActionPerformed
     private void closeWin() {
         int input = JOptionPane.showOptionDialog(null, "Do you want to exit?", "Exit",
@@ -801,12 +817,6 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
         } else {
             setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         }
-    }
-
-    @Override
-    public void aesthetic(JLabel label, int checker, Color any) {
-        label.setBorder(javax.swing.BorderFactory.createBevelBorder(checker));
-        label.setForeground(any);
     }
 
     private int autoSum() {
@@ -883,11 +893,14 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
         PreparedStatement pst;
         ResultSet rs;
         try {
+            con.beginRequest();
             //   String sql = "select * from itemLists";
             String sql = "select ID,itemName as Name,itemStock as Stock from itemLists";
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
             tableStock.setModel(DbUtils.resultSetToTableModel(rs));
+            rs.close();
+            con.endRequest();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -928,16 +941,6 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
         }
     }
 
-    @Override
-    public void panelChanger(JPanel parentPanel, JPanel panel) {
-        parentPanel.removeAll();
-        parentPanel.repaint();
-        parentPanel.revalidate();
-        parentPanel.add(panel);
-        parentPanel.repaint();
-        parentPanel.revalidate();
-    }
-
     private float getSum() {
         float tot = 0;
         for (int i = 0; i < tableSoldItems.getRowCount(); i++) {
@@ -954,6 +957,7 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
         ResultSet rs;
         int flg = 0;
         try {
+            con.beginRequest();
             String query = "Select * from itemLists where " + value + "=?";
             pst = con.prepareStatement(query);
             pst.setString(1, sText);
@@ -964,20 +968,20 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
                 lblPrice.setText(Float.toString(iPrice));
                 getTfQuantity().setText(rs.getString("itemQuantity"));
                 lblTotStock.setText(Integer.toString(rs.getInt("itemStock")));
-               
+
                 CurStock();
                 //  autoSum();
             } else if (flg == 0) {
                 flg = 1;
                 clear();
             }
-
+            rs.close();
+            con.endRequest();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
 
-    @Override
     public void clear() {
         //Thread.sleep(150);
         lblName.setText("");
@@ -1031,7 +1035,7 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
         bOption.setEnabled(false);
     }
 
-  /*  private void userLog(String userActive) {
+    /*  private void userLog(String userActive) {
 
         PreparedStatement pst;
         ResultSet rs;
@@ -1039,7 +1043,6 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
                 + "(Seller) SELECT uName from userLogin \n"
                 + "WHERE uName='" + userActive + "'";
     }*/
-
     /**
      * @param args the command line arguments
      */
@@ -1071,8 +1074,8 @@ public class mainFrame extends javax.swing.JFrame implements testInter {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ItemBack;
-    public static javax.swing.JPanel MainPanel;
-    public static javax.swing.JPanel PanelFrame;
+    private javax.swing.JPanel MainPanel;
+    private javax.swing.JPanel PanelFrame;
     private javax.swing.JButton bDelete;
     private javax.swing.JButton bItemViewer;
     private javax.swing.JButton bOption;

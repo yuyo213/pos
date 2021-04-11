@@ -9,41 +9,26 @@ import java.awt.Color;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import static poscnsl2.POSCnsl.con;
 import javax.swing.border.BevelBorder;
+import static poscnsl2.POSCnsl.panelChanger;
+import static poscnsl2.POSCnsl.aesthetic;
 
 /**
  *
  * @author Butaw
  */
-public class LoginSystem extends javax.swing.JFrame implements testInter {
+public final class LoginSystem extends javax.swing.JFrame {
 
-    /**
-     * @return the mod
-     */
-    public String getMod() {
-        return mod;
-    }
+    static final Connection con = My_Connection.dbConnection();
 
-    /**
-     * @param mod the mod to set
-     */
-    public void setMod(String mod) {
-        this.mod = mod;
-    }
-
-    /**
-     * Creates new form LoginSystem
-     */
     protected String mod = "Seller";
 
-    public LoginSystem() {
+    private LoginSystem() {
 
         initComponents();
         setResizable(false);
@@ -54,7 +39,6 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
 
     }
 
-    @Override
     public void clear() {
         tfCreateUser.setText("");
         tfName.setText("");
@@ -299,19 +283,21 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
             if (confirm.equals(cPass)) {//password confirm
                 if (!checkuser(tfCreateUser.getText()))// check on db if user exist if not then proceed
                     try {
+                        con.beginRequest();
                     String query = "Insert into userLogin(Name,uPos,uName,uPass)values(?,?,?,?)";
                     pst = con.prepareStatement(query);
                     pst.setString(1, tfName.getText());
-                    pst.setString(2, getMod());
+                    pst.setString(2, mod);
                     pst.setString(3, tfCreateUser.getText());
                     pst.setString(4, cPass);
                     pst.execute();
-                    pst.close();
                     JOptionPane.showMessageDialog(null, "Created Successfully!");
                     clear();
                     panelChanger(mainPanel, loginPanel);
                     lblInvalid.hide();
                     lblCreate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
+                    pst.close();
+                    con.endRequest();
                 } catch (HeadlessException | SQLException e) {
                     JOptionPane.showMessageDialog(null, e);
                 }
@@ -324,7 +310,7 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
 
     }//GEN-LAST:event_bCreateActionPerformed
 
-    public boolean checkuser(String input) {
+    private boolean checkuser(String input) {
         PreparedStatement pst;
         ResultSet rs;
         boolean user_exist = false;
@@ -332,6 +318,7 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
         String query = "SELECT * FROM `userLogin` WHERE `uName` = ?";
 
         try {
+            con.beginRequest();
             pst = con.prepareStatement(query);
             pst.setString(1, input);
             rs = pst.executeQuery();
@@ -341,20 +328,21 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
                 JOptionPane.showMessageDialog(null, "Username Already Exist", "Username Failed", 2);
 
             }
+            con.endRequest();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
         return user_exist;
     }
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-         panelChanger(mainPanel, loginPanel);
+        panelChanger(mainPanel, loginPanel);
         lblInvalid.hide();
         lblCreate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void lblCreateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCreateMouseClicked
         aesthetic(jLabel7, BevelBorder.RAISED, Color.black);
-         panelChanger(mainPanel, createPanel);
+        panelChanger(mainPanel, createPanel);
 
 
     }//GEN-LAST:event_lblCreateMouseClicked
@@ -376,6 +364,7 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
             JOptionPane.showMessageDialog(null, "Please input");
         } else {
             try {
+                con.beginRequest();
                 String userLowletter = tfUser.getText().toLowerCase();
                 String query = "Select * from userLogin where uName=? and uPass=?";
                 pst = con.prepareStatement(query);
@@ -386,9 +375,10 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
                 user = rs.getString("Name");
                 checkPos(pos);
                 pst.close();
+                con.endRequest();
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "Wrong User and Pass");
-                //JOptionPane.showMessageDialog(null, e);
+                JOptionPane.showMessageDialog(null, e);
                 lblInvalid.show();
             }
         }
@@ -433,15 +423,15 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
         PreparedStatement pst;
         ResultSet rs;
         String pos, uID;
-        mainFrame form = new mainFrame();
+        mainFrame form = mainFrame.getInstance();
         boolean user_exist = false;
-        String query = "SELECT * FROM `userLogin` WHERE `ID` = ?";
 
         try {
+            con.beginRequest();
+            String query = "SELECT * FROM `userLogin` WHERE `ID` = ?";
             pst = con.prepareStatement(query);
             pst.setString(1, input);
             rs = pst.executeQuery();
-
             if (rs.next()) {
                 user_exist = true;
                 uID = rs.getString("ID");
@@ -449,7 +439,6 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
                 if (input.equals(uID)) {
                     if (pos.equals("Admin")) {
                         System.out.println("WOOOOOOW you're an admin");
-
                     } else {
                         System.out.println("WOOOOOOW you're an seller");
                         form.seller();
@@ -460,12 +449,11 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
                 form.pack();
                 form.setLocationRelativeTo(null);
                 dispose();
-                setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
+                rs.close();
                 //JOptionPane.showMessageDialog(null,"Invalid email and pass","Login Error",2 );
             }
             lblInvalid.show();
-
+            con.endRequest();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -500,10 +488,8 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginSystem().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new LoginSystem().setVisible(true);
         });
     }
 
@@ -531,21 +517,4 @@ public class LoginSystem extends javax.swing.JFrame implements testInter {
     private javax.swing.JTextField tfUser;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void panelChanger(JPanel parentPanel, JPanel panel) {
-
-        parentPanel.removeAll();
-        parentPanel.repaint();
-        parentPanel.revalidate();
-        parentPanel.add(panel);
-        parentPanel.repaint();
-        parentPanel.revalidate();
-
-    }
-
-    @Override
-    public void aesthetic(JLabel label, int checker, Color any) {
-        label.setBorder(javax.swing.BorderFactory.createBevelBorder(checker));
-        label.setForeground(any);
-    }
 }

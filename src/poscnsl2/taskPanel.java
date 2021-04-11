@@ -11,28 +11,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
-
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
-import static poscnsl2.POSCnsl.con;
-import static poscnsl2.mainFrame.PanelFrame;
-import static poscnsl2.mainFrame.MainPanel;
-
+import static poscnsl2.POSCnsl.panelChanger;
+import static poscnsl2.POSCnsl.aesthetic;
+import static poscnsl2.LoginSystem.con;
 /**
  *
  * @author Butaw
  */
-public class taskPanel extends javax.swing.JPanel implements testInter {
+public class taskPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form optionPanel
      */
-    public taskPanel() {
+    static taskPanel task = new taskPanel();
+    mainFrame f = mainFrame.getInstance();
+    private taskPanel() {
         initComponents();
+    }
+    
+    public static taskPanel getInstance() {
+        return task;
     }
 
     /**
@@ -46,7 +48,7 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
 
         panelOption = new javax.swing.JPanel();
         lblBack = new javax.swing.JLabel();
-        panelTabs = new javax.swing.JPanel();
+        panelTables = new javax.swing.JPanel();
         panelTable = new javax.swing.JPanel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jMonthChooser1 = new com.toedter.calendar.JMonthChooser();
@@ -76,7 +78,7 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
         lblAddID = new javax.swing.JLabel();
         TransPanel = new javax.swing.JPanel();
         accountPanel = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        tabPanel = new javax.swing.JPanel();
         lblViewTab = new javax.swing.JLabel();
         lblCrud = new javax.swing.JLabel();
         lblTransactions = new javax.swing.JLabel();
@@ -98,7 +100,7 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
             }
         });
 
-        panelTabs.setLayout(new java.awt.CardLayout());
+        panelTables.setLayout(new java.awt.CardLayout());
 
         panelTable.setBackground(new java.awt.Color(255, 255, 255));
         panelTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -175,10 +177,10 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
                     .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15)
                     .addComponent(jLabel16))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
-        panelTabs.add(panelTable, "card2");
+        panelTables.add(panelTable, "card2");
 
         crudPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -347,7 +349,7 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        panelTabs.add(crudPanel, "card3");
+        panelTables.add(crudPanel, "card3");
 
         TransPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -359,10 +361,10 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
         );
         TransPanelLayout.setVerticalGroup(
             TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 585, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
 
-        panelTabs.add(TransPanel, "card4");
+        panelTables.add(TransPanel, "card4");
 
         accountPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -374,10 +376,10 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
         );
         accountPanelLayout.setVerticalGroup(
             accountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 585, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
 
-        panelTabs.add(accountPanel, "card5");
+        panelTables.add(accountPanel, "card5");
 
         lblViewTab.setBackground(new java.awt.Color(204, 204, 204));
         lblViewTab.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
@@ -443,11 +445,11 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout tabPanelLayout = new javax.swing.GroupLayout(tabPanel);
+        tabPanel.setLayout(tabPanelLayout);
+        tabPanelLayout.setHorizontalGroup(
+            tabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tabPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblViewTab)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -458,11 +460,11 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
                 .addComponent(lblaccManager)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        tabPanelLayout.setVerticalGroup(
+            tabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tabPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(tabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblViewTab, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCrud, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTransactions, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -480,8 +482,8 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
                     .addGroup(panelOptionLayout.createSequentialGroup()
                         .addComponent(lblBack, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(panelTabs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelTables, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tabPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelOptionLayout.setVerticalGroup(
@@ -490,9 +492,9 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
                 .addContainerGap()
                 .addComponent(lblBack, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
-                .addComponent(panelTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 587, Short.MAX_VALUE)
+                .addComponent(panelTables, javax.swing.GroupLayout.PREFERRED_SIZE, 587, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -519,21 +521,15 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lblBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBackMouseClicked
-        PanelFrame.removeAll();
-        PanelFrame.repaint();
-        PanelFrame.revalidate();
-        PanelFrame.add(MainPanel);
-        PanelFrame.repaint();
-        PanelFrame.revalidate();
+        panelChanger(f.getFramePanel(), f.getMainPanel());
+        aesthetic(lblBack, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_lblBackMouseClicked
 
     private void lblBackMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBackMouseEntered
-        lblBack.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         aesthetic(lblBack, BevelBorder.LOWERED, Color.red);
     }//GEN-LAST:event_lblBackMouseEntered
 
     private void lblBackMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBackMouseExited
-        lblBack.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         aesthetic(lblBack, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_lblBackMouseExited
 
@@ -558,7 +554,6 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-
         PreparedStatement ps;
         ResultSet rs;
         if (tfAddItemCode.getText().equals("") || tfAddItemName.getText().equals("") || tfAddItemPrice.getText().equals("")
@@ -566,20 +561,23 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
             JOptionPane.showMessageDialog(null, "Input Somethin first");
         } else {
             if (!checkItem(tfAddItemName.getText())) { // check item if its already exist
-                String query1 = "insert into itemLists(code,itemName,itemQuantity,itemPrice,itemStock)values('" + tfAddItemCode.getText() + "','" + tfAddItemName.getText()
-                        + "','" + tfAddItemQuan.getText() + "','" + tfAddItemPrice.getText() + "','" + tfAddItemStock.getText() + "')";
                 try {
+                    con.beginRequest();
+                      String query1 = "insert into itemLists(code,itemName,itemQuantity,itemPrice,itemStock)values('" + tfAddItemCode.getText()
+                        + "','" + tfAddItemName.getText() + "','" + tfAddItemQuan.getText()
+                        + "','" + tfAddItemPrice.getText() + "','" + tfAddItemStock.getText() + "')";
                     ps = con.prepareStatement(query1);
-
                     int i = ps.executeUpdate();
                     if (i >= 1) {
                         JOptionPane.showMessageDialog(null, tfAddItemName.getText() + " Data Saved!");//if 1
                         updateItems();
                         clear();
+                        ps.close();
                     } else {
                         JOptionPane.showMessageDialog(null, tfAddItemName.getText() + "Failed to Save!");//else 1
 
                     }
+                    con.endRequest();
                 } catch (SQLException e) {
                     JOptionPane.showMessageDialog(null, e);
                 }
@@ -596,6 +594,7 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
         } else {
 
             try {
+                con.beginRequest();
                 String query = "Update itemLists set itemPrice=?,itemName=?,itemQuantity=?,itemStock=?,code=? where ID=?";
                 ps = con.prepareStatement(query);
                 ps.setString(6, lblAddID.getText());
@@ -614,7 +613,8 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
                 if (input == JOptionPane.OK_OPTION) {
 
                 }*/
-
+                ps.close();
+                con.endRequest();
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
@@ -629,15 +629,17 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
         if (tfAddItemCode.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "No item Selected");
         } else {
-            String query = "DELETE FROM `itemLists` WHERE `code` ='" + tfAddItemCode.getText() + "'";
             //                String query = "delete from client_info where id=?";
             try {
+                con.beginRequest();
+                  String query = "DELETE FROM `itemLists` WHERE `code` ='" + tfAddItemCode.getText() + "'";
                 pst = con.prepareStatement(query);
                 JOptionPane.showMessageDialog(null, "Item Deleted");
                 pst.executeUpdate();
-                pst.close();
                 updateItems();
                 clear();
+                pst.close();
+                con.endRequest();
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, ex);
             }
@@ -648,7 +650,7 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
     private void lblViewTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblViewTabMouseClicked
         // TODO add your handling code here:
         //view table
-        panelChanger(panelTabs, panelTable);
+        panelChanger(panelTables, panelTable);
     }//GEN-LAST:event_lblViewTabMouseClicked
 
     private void lblViewTabMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblViewTabMouseEntered
@@ -666,7 +668,7 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
     private void lblCrudMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCrudMouseClicked
         // TODO add your handling code here:
         //crud
-        panelChanger(panelTabs, crudPanel);
+        panelChanger(panelTables, crudPanel);
         tfAddItemCode.requestFocus();
         updateItems();
     }//GEN-LAST:event_lblCrudMouseClicked
@@ -685,7 +687,7 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
 
     private void lblTransactionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTransactionsMouseClicked
         // TODO add your handling code here:
-        panelChanger(panelTabs, TransPanel);
+        panelChanger(panelTables, TransPanel);
     }//GEN-LAST:event_lblTransactionsMouseClicked
 
     private void lblTransactionsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTransactionsMouseEntered
@@ -700,8 +702,8 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
 
     private void lblaccManagerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblaccManagerMouseClicked
         // TODO add your handling code here:
+        panelChanger(panelTables, accountPanel);
 
-        panelChanger(panelTabs, accountPanel);
     }//GEN-LAST:event_lblaccManagerMouseClicked
 
     private void lblaccManagerMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblaccManagerMouseEntered
@@ -716,29 +718,16 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
         aesthetic(lblaccManager, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_lblaccManagerMouseExited
 
-    public void panelChanger(JPanel parentPanel, JPanel panel) {
-        parentPanel.removeAll();
-        parentPanel.repaint();
-        parentPanel.revalidate();
-        parentPanel.add(panel);
-        parentPanel.repaint();
-        parentPanel.revalidate();
-    }
-
-    @Override
-    public void aesthetic(JLabel label, int checker, Color any) {
-        label.setBorder(javax.swing.BorderFactory.createBevelBorder(checker));
-        label.setForeground(any);
-    }
-
-    public boolean checkItem(String input) {
+    private boolean checkItem(String input) {
         PreparedStatement pst;
         ResultSet rs;
         boolean user_exist = false;
 
-        String query = "SELECT * FROM `itemLists` WHERE `itemName` = ?";
+      
 
         try {
+            con.beginRequest();
+              String query = "SELECT * FROM `itemLists` WHERE `itemName` = ?";
             pst = con.prepareStatement(query);
             pst.setString(1, input);
             rs = pst.executeQuery();
@@ -748,6 +737,8 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
                 JOptionPane.showMessageDialog(null, "Item already Exist", "Saving Item Failed", 2);
 
             }
+            rs.close();
+            con.endRequest();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -772,7 +763,6 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private com.toedter.calendar.JMonthChooser jMonthChooser1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblAddID;
@@ -783,7 +773,8 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
     private javax.swing.JLabel lblaccManager;
     public static javax.swing.JPanel panelOption;
     private javax.swing.JPanel panelTable;
-    private javax.swing.JPanel panelTabs;
+    private javax.swing.JPanel panelTables;
+    private javax.swing.JPanel tabPanel;
     private javax.swing.JTable tableAddItem;
     private javax.swing.JTable tableMonth;
     private javax.swing.JTextField tfAddItemCode;
@@ -795,7 +786,7 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
 
     private void updateItems() {
         try {
-
+            con.beginRequest();
             PreparedStatement pst;
             ResultSet rs;
             //   String sql = "select * from itemLists";
@@ -803,13 +794,13 @@ public class taskPanel extends javax.swing.JPanel implements testInter {
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
             tableAddItem.setModel(DbUtils.resultSetToTableModel(rs));
-
+            rs.close();
+            con.endRequest();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
 
-    @Override
     public void clear() {
         lblAddID.setText("");
         tfAddItemCode.setText("");
