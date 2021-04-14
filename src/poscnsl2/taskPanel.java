@@ -18,6 +18,7 @@ import net.proteanit.sql.DbUtils;
 import static poscnsl2.POSCnsl.panelChanger;
 import static poscnsl2.POSCnsl.aesthetic;
 import static poscnsl2.LoginSystem.con;
+
 /**
  *
  * @author Butaw
@@ -29,10 +30,11 @@ public class taskPanel extends javax.swing.JPanel {
      */
     static taskPanel task = new taskPanel();
     mainFrame f = mainFrame.getInstance();
+
     private taskPanel() {
         initComponents();
     }
-    
+
     public static taskPanel getInstance() {
         return task;
     }
@@ -46,9 +48,7 @@ public class taskPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelOption = new javax.swing.JPanel();
-        lblBack = new javax.swing.JLabel();
-        panelTables = new javax.swing.JPanel();
+        lblViewTab = new javax.swing.JLabel();
         panelTable = new javax.swing.JPanel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jMonthChooser1 = new com.toedter.calendar.JMonthChooser();
@@ -58,6 +58,10 @@ public class taskPanel extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
+        panelOption = new javax.swing.JPanel();
+        lblBack = new javax.swing.JLabel();
+        panelTables = new javax.swing.JPanel();
+        TransPanel = new javax.swing.JPanel();
         crudPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tableAddItem = new javax.swing.JTable();
@@ -76,31 +80,27 @@ public class taskPanel extends javax.swing.JPanel {
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         lblAddID = new javax.swing.JLabel();
-        TransPanel = new javax.swing.JPanel();
         accountPanel = new javax.swing.JPanel();
         tabPanel = new javax.swing.JPanel();
-        lblViewTab = new javax.swing.JLabel();
         lblCrud = new javax.swing.JLabel();
         lblTransactions = new javax.swing.JLabel();
         lblaccManager = new javax.swing.JLabel();
 
-        lblBack.setBackground(new java.awt.Color(204, 204, 204));
-        lblBack.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        lblBack.setText("   Back");
-        lblBack.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        lblBack.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblViewTab.setBackground(new java.awt.Color(204, 204, 204));
+        lblViewTab.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        lblViewTab.setText("Table Infos");
+        lblViewTab.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        lblViewTab.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblBackMouseClicked(evt);
+                lblViewTabMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblBackMouseEntered(evt);
+                lblViewTabMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblBackMouseExited(evt);
+                lblViewTabMouseExited(evt);
             }
         });
-
-        panelTables.setLayout(new java.awt.CardLayout());
 
         panelTable.setBackground(new java.awt.Color(255, 255, 255));
         panelTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -180,7 +180,38 @@ public class taskPanel extends javax.swing.JPanel {
                 .addContainerGap(61, Short.MAX_VALUE))
         );
 
-        panelTables.add(panelTable, "card2");
+        lblBack.setBackground(new java.awt.Color(204, 204, 204));
+        lblBack.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        lblBack.setText("   Back");
+        lblBack.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        lblBack.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblBackMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblBackMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblBackMouseExited(evt);
+            }
+        });
+
+        panelTables.setLayout(new java.awt.CardLayout());
+
+        TransPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        javax.swing.GroupLayout TransPanelLayout = new javax.swing.GroupLayout(TransPanel);
+        TransPanel.setLayout(TransPanelLayout);
+        TransPanelLayout.setHorizontalGroup(
+            TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 700, Short.MAX_VALUE)
+        );
+        TransPanelLayout.setVerticalGroup(
+            TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 606, Short.MAX_VALUE)
+        );
+
+        panelTables.add(TransPanel, "card4");
 
         crudPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -346,25 +377,11 @@ public class taskPanel extends javax.swing.JPanel {
                     .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(135, 135, 135)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         panelTables.add(crudPanel, "card3");
-
-        TransPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout TransPanelLayout = new javax.swing.GroupLayout(TransPanel);
-        TransPanel.setLayout(TransPanelLayout);
-        TransPanelLayout.setHorizontalGroup(
-            TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
-        );
-        TransPanelLayout.setVerticalGroup(
-            TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 606, Short.MAX_VALUE)
-        );
-
-        panelTables.add(TransPanel, "card4");
 
         accountPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -380,22 +397,6 @@ public class taskPanel extends javax.swing.JPanel {
         );
 
         panelTables.add(accountPanel, "card5");
-
-        lblViewTab.setBackground(new java.awt.Color(204, 204, 204));
-        lblViewTab.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        lblViewTab.setText("Table Infos");
-        lblViewTab.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        lblViewTab.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblViewTabMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblViewTabMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblViewTabMouseExited(evt);
-            }
-        });
 
         lblCrud.setBackground(new java.awt.Color(204, 204, 204));
         lblCrud.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
@@ -451,13 +452,11 @@ public class taskPanel extends javax.swing.JPanel {
             tabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tabPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblViewTab)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblCrud)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblTransactions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblaccManager)
+                .addComponent(lblCrud)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblaccManager, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         tabPanelLayout.setVerticalGroup(
@@ -465,7 +464,6 @@ public class taskPanel extends javax.swing.JPanel {
             .addGroup(tabPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(tabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblViewTab, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCrud, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTransactions, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblaccManager, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -541,6 +539,7 @@ public class taskPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jMonthChooser1PropertyChange
 
     private void tableAddItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAddItemMouseClicked
+        //if table got click print all rows in fields
         DefaultTableModel model = (DefaultTableModel) tableAddItem.getModel();
         int i = tableAddItem.getSelectedRow();
         //        model.getValueAt(i, 0).toString();
@@ -553,19 +552,18 @@ public class taskPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_tableAddItemMouseClicked
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
+        // ADD items in database
         PreparedStatement ps;
         ResultSet rs;
-        if (tfAddItemCode.getText().equals("") || tfAddItemName.getText().equals("") || tfAddItemPrice.getText().equals("")
-                || tfAddItemQuan.getText().equals("") || tfAddItemStock.getText().equals("")) {
+        if(checkFields()){// check if fields are not null or empty
             JOptionPane.showMessageDialog(null, "Input Somethin first");
         } else {
             if (!checkItem(tfAddItemName.getText())) { // check item if its already exist
                 try {
                     con.beginRequest();
-                      String query1 = "insert into itemLists(code,itemName,itemQuantity,itemPrice,itemStock)values('" + tfAddItemCode.getText()
-                        + "','" + tfAddItemName.getText() + "','" + tfAddItemQuan.getText()
-                        + "','" + tfAddItemPrice.getText() + "','" + tfAddItemStock.getText() + "')";
+                    String query1 = "insert into itemLists(code,itemName,itemQuantity,itemPrice,itemStock)values('" + tfAddItemCode.getText()
+                            + "','" + tfAddItemName.getText() + "','" + tfAddItemQuan.getText()
+                            + "','" + tfAddItemPrice.getText() + "','" + tfAddItemStock.getText() + "')";
                     ps = con.prepareStatement(query1);
                     int i = ps.executeUpdate();
                     if (i >= 1) {
@@ -584,15 +582,20 @@ public class taskPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_btnAddActionPerformed
-
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        PreparedStatement ps;
-
+    private boolean checkFields() {//checker if fields are not null
         if (tfAddItemName.getText().equals("") || tfAddItemCode.getText().equals("") || tfAddItemPrice.getText().equals("")
                 || tfAddItemQuan.getText().equals("") || tfAddItemStock.getText().equals("")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        //UPDATE BUTTON
+        PreparedStatement ps;
+        if (checkFields()) {//check if fields are not null
             JOptionPane.showMessageDialog(null, "Please Complete", "Error", 2);
         } else {
-
             try {
                 con.beginRequest();
                 String query = "Update itemLists set itemPrice=?,itemName=?,itemQuantity=?,itemStock=?,code=? where ID=?";
@@ -623,16 +626,16 @@ public class taskPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        // TODO add your handling code here:
-        // TODO add your handling code here:
+        // DELETE BUTTON:
+        // DELETE ITEM IN DATABASE 
         PreparedStatement pst;
-        if (tfAddItemCode.getText().equals("")) {
+        if (checkFields()) {
             JOptionPane.showMessageDialog(null, "No item Selected");
         } else {
             //                String query = "delete from client_info where id=?";
             try {
                 con.beginRequest();
-                  String query = "DELETE FROM `itemLists` WHERE `code` ='" + tfAddItemCode.getText() + "'";
+                String query = "DELETE FROM `itemLists` WHERE `code` ='" + tfAddItemCode.getText() + "'";
                 pst = con.prepareStatement(query);
                 JOptionPane.showMessageDialog(null, "Item Deleted");
                 pst.executeUpdate();
@@ -718,16 +721,14 @@ public class taskPanel extends javax.swing.JPanel {
         aesthetic(lblaccManager, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_lblaccManagerMouseExited
 
-    private boolean checkItem(String input) {
+    private boolean checkItem(String input) {//check item in database if not exist = save it
         PreparedStatement pst;
         ResultSet rs;
         boolean user_exist = false;
 
-      
-
         try {
             con.beginRequest();
-              String query = "SELECT * FROM `itemLists` WHERE `itemName` = ?";
+            String query = "SELECT * FROM `itemLists` WHERE `itemName` = ?";
             pst = con.prepareStatement(query);
             pst.setString(1, input);
             rs = pst.executeQuery();
@@ -771,7 +772,7 @@ public class taskPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblTransactions;
     private javax.swing.JLabel lblViewTab;
     private javax.swing.JLabel lblaccManager;
-    public static javax.swing.JPanel panelOption;
+    private javax.swing.JPanel panelOption;
     private javax.swing.JPanel panelTable;
     private javax.swing.JPanel panelTables;
     private javax.swing.JPanel tabPanel;
@@ -784,7 +785,7 @@ public class taskPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tfAddItemStock;
     // End of variables declaration//GEN-END:variables
 
-    private void updateItems() {
+    private void updateItems() {// print all data in itemName in tableAddItem
         try {
             con.beginRequest();
             PreparedStatement pst;
@@ -796,12 +797,12 @@ public class taskPanel extends javax.swing.JPanel {
             tableAddItem.setModel(DbUtils.resultSetToTableModel(rs));
             rs.close();
             con.endRequest();
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
 
-    public void clear() {
+    public void clear() {//clear fields
         lblAddID.setText("");
         tfAddItemCode.setText("");
         tfAddItemName.setText("");

@@ -273,10 +273,11 @@ public final class LoginSystem extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCreateActionPerformed
+       /*Create user button */
         PreparedStatement pst;
         String confirm = String.valueOf(pfConfirm.getPassword());
         String cPass = String.valueOf(pfCreatePass.getPassword());
-        if (tfName.getText().equals("") || tfCreateUser.getText().equals("") || confirm.equals("")
+        if (tfName.getText().equals("") || tfCreateUser.getText().equals("") || confirm.equals("")// checking textfields if null or ""
                 || cPass.equals("")) { // input fields
             JOptionPane.showMessageDialog(null, "Please input");
         } else {
@@ -310,7 +311,7 @@ public final class LoginSystem extends javax.swing.JFrame {
 
     }//GEN-LAST:event_bCreateActionPerformed
 
-    private boolean checkuser(String input) {
+    private boolean checkuser(String input) {//check username/uName if exist
         PreparedStatement pst;
         ResultSet rs;
         boolean user_exist = false;
@@ -356,12 +357,13 @@ public final class LoginSystem extends javax.swing.JFrame {
     }//GEN-LAST:event_lblCreateMouseExited
 
     private void bLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLoginActionPerformed
+       /*login button*/
         PreparedStatement pst;
         String pos, user;
 
         ResultSet rs;
         if (tfUser.getText().equals("") || pfPass.getPassword().equals("")) {
-            JOptionPane.showMessageDialog(null, "Please input");
+            JOptionPane.showMessageDialog(null, "Please input"); // checking fields if it's null or not
         } else {
             try {
                 con.beginRequest();
@@ -378,7 +380,7 @@ public final class LoginSystem extends javax.swing.JFrame {
                 con.endRequest();
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "Wrong User and Pass");
-                JOptionPane.showMessageDialog(null, e);
+          //      JOptionPane.showMessageDialog(null, e);
                 lblInvalid.show();
             }
         }
@@ -419,7 +421,7 @@ public final class LoginSystem extends javax.swing.JFrame {
         }
     }
 
-    private boolean checkPos(String input) {
+    private boolean checkPos(String input) {//checking posistion admin or seller
         PreparedStatement pst;
         ResultSet rs;
         String pos, uID;
@@ -435,13 +437,14 @@ public final class LoginSystem extends javax.swing.JFrame {
             if (rs.next()) {
                 user_exist = true;
                 uID = rs.getString("ID");
+                form.user(rs.getString("Name"));
                 pos = rs.getString("uPos");
                 if (input.equals(uID)) {
-                    if (pos.equals("Admin")) {
-                        System.out.println("WOOOOOOW you're an admin");
-                    } else {
-                        System.out.println("WOOOOOOW you're an seller");
-                        form.seller();
+                    if (pos.equals("Seller")) {//checking if seller
+                       System.out.println("WOOOOOOW you're an seller");
+                      form.seller();
+                    } else {//if not
+                      System.out.println("WOOOOOOW you're an admin");
                     }
                 }
                 JOptionPane.showMessageDialog(null, "Activated!");
@@ -459,7 +462,8 @@ public final class LoginSystem extends javax.swing.JFrame {
         }
         return user_exist;
     }
-
+   
+  
     /**
      * @param args the command line arguments
      */
@@ -476,15 +480,11 @@ public final class LoginSystem extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginSystem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginSystem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginSystem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(LoginSystem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */

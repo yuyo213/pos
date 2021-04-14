@@ -28,7 +28,7 @@ import static poscnsl2.LoginSystem.con;
  *
  * @author Butaw
  */
-public class mainFrame extends javax.swing.JFrame {
+public final class mainFrame extends javax.swing.JFrame {
 
     public javax.swing.JTextField getTfQuantity() {
         return tfQuantity;
@@ -55,7 +55,7 @@ public class mainFrame extends javax.swing.JFrame {
     SimpleDateFormat dbD = new SimpleDateFormat("MM-dd-yyyy");
     private final String dbDate = dbD.format(d);
 
-    static private mainFrame main = new mainFrame();
+    private static final mainFrame main = new mainFrame();
 
     private mainFrame() {
 
@@ -129,6 +129,8 @@ public class mainFrame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         lblExchange = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        lblSeller = new javax.swing.JLabel();
         lblExit = new javax.swing.JLabel();
         itemViewer = new javax.swing.JPanel();
         tablePanel1 = new javax.swing.JPanel();
@@ -337,22 +339,22 @@ public class mainFrame extends javax.swing.JFrame {
             }
         });
         pricePanel.add(tfQuantity);
-        tfQuantity.setBounds(130, 160, 128, 26);
+        tfQuantity.setBounds(130, 210, 128, 26);
 
         lblPrice.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         lblPrice.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         pricePanel.add(lblPrice);
-        lblPrice.setBounds(130, 40, 128, 30);
+        lblPrice.setBounds(130, 90, 128, 30);
 
         jLabel2.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jLabel2.setText("Price:");
         pricePanel.add(jLabel2);
-        jLabel2.setBounds(70, 40, 48, 30);
+        jLabel2.setBounds(70, 90, 48, 30);
 
         jLabel3.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jLabel3.setText("Quantity:");
         pricePanel.add(jLabel3);
-        jLabel3.setBounds(50, 160, 72, 31);
+        jLabel3.setBounds(50, 210, 72, 31);
 
         lblDate.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         lblDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -377,12 +379,12 @@ public class mainFrame extends javax.swing.JFrame {
         lblName.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         lblName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         pricePanel.add(lblName);
-        lblName.setBounds(130, 10, 128, 25);
+        lblName.setBounds(130, 50, 128, 25);
 
         jLabel10.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jLabel10.setText("Item Name:");
         pricePanel.add(jLabel10);
-        jLabel10.setBounds(40, 10, 80, 20);
+        jLabel10.setBounds(40, 50, 80, 20);
 
         jLabel9.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jLabel9.setText("Transaction ID:");
@@ -397,7 +399,7 @@ public class mainFrame extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jLabel11.setText("Total Stock:");
         pricePanel.add(jLabel11);
-        jLabel11.setBounds(20, 80, 100, 30);
+        jLabel11.setBounds(20, 130, 100, 30);
 
         lblTotStock.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         lblTotStock.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -407,17 +409,17 @@ public class mainFrame extends javax.swing.JFrame {
             }
         });
         pricePanel.add(lblTotStock);
-        lblTotStock.setBounds(130, 80, 128, 27);
+        lblTotStock.setBounds(130, 130, 128, 27);
 
         jLabel12.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jLabel12.setText("Current Stock:");
         pricePanel.add(jLabel12);
-        jLabel12.setBounds(10, 120, 120, 30);
+        jLabel12.setBounds(10, 170, 120, 30);
 
         lblCurStock.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         lblCurStock.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         pricePanel.add(lblCurStock);
-        lblCurStock.setBounds(130, 120, 130, 30);
+        lblCurStock.setBounds(130, 170, 130, 30);
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -467,6 +469,16 @@ public class mainFrame extends javax.swing.JFrame {
         pricePanel.add(jPanel1);
         jPanel1.setBounds(280, 130, 410, 110);
 
+        jLabel13.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        jLabel13.setText("Seller Name:");
+        pricePanel.add(jLabel13);
+        jLabel13.setBounds(20, 10, 100, 20);
+
+        lblSeller.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        lblSeller.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pricePanel.add(lblSeller);
+        lblSeller.setBounds(130, 10, 128, 25);
+
         lblExit.setBackground(new java.awt.Color(204, 204, 204));
         lblExit.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         lblExit.setText("         Exit");
@@ -507,7 +519,7 @@ public class mainFrame extends javax.swing.JFrame {
             MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pricePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+                .addComponent(pricePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(MainPanelLayout.createSequentialGroup()
@@ -517,7 +529,8 @@ public class mainFrame extends javax.swing.JFrame {
                     .addGroup(MainPanelLayout.createSequentialGroup()
                         .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         PanelFrame.add(MainPanel, "card2");
@@ -579,7 +592,7 @@ public class mainFrame extends javax.swing.JFrame {
                 .addGroup(itemViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tablePanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ItemBack))
-                .addContainerGap(558, Short.MAX_VALUE))
+                .addContainerGap(594, Short.MAX_VALUE))
         );
 
         PanelFrame.add(itemViewer, "card4");
@@ -590,7 +603,7 @@ public class mainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bResetActionPerformed
-        // TODO add your handling code here:
+        // RESET or new transaction (need to save the transac. to database!)
         int input = JOptionPane.showOptionDialog(null, "New Transaction?", "Saving Transaction",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, null, null);
@@ -615,7 +628,7 @@ public class mainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_bResetActionPerformed
 
     private void bOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOptionActionPerformed
-        // OPTION
+        // OPTION or portal to task panel
         //taskPanel task = new taskPanel();
         taskPanel task = taskPanel.getInstance();
         panelChanger(PanelFrame, task);
@@ -808,7 +821,7 @@ public class mainFrame extends javax.swing.JFrame {
         panelChanger(PanelFrame, MainPanel);
 
     }//GEN-LAST:event_ItemBackActionPerformed
-    private void closeWin() {
+    private void closeWin() {//window closing dialog 
         int input = JOptionPane.showOptionDialog(null, "Do you want to exit?", "Exit",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, null, null);
@@ -819,7 +832,7 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    private int autoSum() {
+    private int autoSum() {// summin up the total - quantity of item = current stock and print to field
         int a, b, c;
 
         if (lblTotStock.getText().equals("") || tfQuantity.getText().equals("")
@@ -853,7 +866,7 @@ public class mainFrame extends javax.swing.JFrame {
 
     }
 
-    private void CurStock() {
+    private void CurStock() {// check if tableSold items has a item(row) or not
         DefaultTableModel dtm = (DefaultTableModel) tableSoldItems.getModel();
         if (dtm.getRowCount() == 0) {
             jtabs(tableStock);
@@ -862,14 +875,14 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void jtabs(JTable jtable) {
+    private void jtabs(JTable jtable) {// check tablestock stock 
         DefaultTableModel tb1 = (DefaultTableModel) jtable.getModel();
         for (int i = 0; i < jtable.getRowCount(); i++) {
             for (int j = 0; j < jtable.getColumnCount(); j++) {
                 if (jtable.getModel().getValueAt(i, j).equals(lblName.getText())) {
                     int tb2 = (int) tb1.getValueAt(i, 2);
                     lblCurStock.setText(Integer.toString(tb2));
-                    if (lblCurStock.getText().equals("0")) {
+                    if (lblCurStock.getText().equals("0")) {// if stock is equal to 0
                         JOptionPane.showMessageDialog(null, "No Stock Available");
                         baddItem.setEnabled(false);
                         tfID.setText("");
@@ -889,7 +902,7 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void updateTableStock() {
+    private void updateTableStock() {// get the database columns and its rows
         PreparedStatement pst;
         ResultSet rs;
         try {
@@ -906,21 +919,21 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void operators(char operator, String iName, String bItem) {
+    private void operators(char operator, String iName, String bItem) {//checking stock in the itemviewer if stock not enough 
         DefaultTableModel tb1 = (DefaultTableModel) tableStock.getModel();
-        for (int i = 0; i < tableStock.getRowCount(); i++) {
+        for (int i = 0; i < tableStock.getRowCount(); i++) {//nested loop (brute force)
             for (int j = 0; j < tableStock.getColumnCount(); j++) {
-                if (tableStock.getModel().getValueAt(i, j).equals(iName)) {
+                if (tableStock.getModel().getValueAt(i, j).equals(iName)) {//check if tablestock == to iName
                     System.out.println(tableStock.getValueAt(i, j));
                     int tStock = (int) tableStock.getValueAt(i, 2);
                     int num2 = Integer.parseInt(bItem);
                     switch (operator) {
-                        case '+' -> {
+                        case '+' -> {//for delete button to add up the deleted item stock
                             int result = tStock + num2;
                             System.out.println(result);
                             tableStock.setValueAt(result, i, 2);
                         }
-                        case '-' -> {
+                        case '-' -> {//for add button to minus item stock
                             int result = tStock - num2;
                             System.out.println(result);
                             tableStock.setValueAt(result, i, 2);
@@ -933,7 +946,7 @@ public class mainFrame extends javax.swing.JFrame {
 
                     int tb2 = (int) tb1.getValueAt(i, 2);
                     if (tb2 < 0) {
-                        JOptionPane.showMessageDialog(null, "Not enough item");
+                        JOptionPane.showMessageDialog(null, "Not enough item");//print this 
                     }
 
                 }
@@ -941,7 +954,7 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    private float getSum() {
+    private float getSum() {// get sum code or total 
         float tot = 0;
         for (int i = 0; i < tableSoldItems.getRowCount(); i++) {
             tot = tot + Float.parseFloat(tableSoldItems.getValueAt(i, 1).toString());
@@ -952,6 +965,7 @@ public class mainFrame extends javax.swing.JFrame {
     }
 
     private void idCode(String value, String sText) {
+    //searching id or code in the database if exist fill the fields with its contents
 
         PreparedStatement pst;
         ResultSet rs;
@@ -982,7 +996,7 @@ public class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    public void clear() {
+    public void clear() {//clear fields
         //Thread.sleep(150);
         lblName.setText("");
         lblPrice.setText("");
@@ -1010,8 +1024,10 @@ public class mainFrame extends javax.swing.JFrame {
         };
         t.start();
     }
-
-    private void transIDs() {
+    public void user(String name){
+       lblSeller.setText(name);
+    }
+    private void transIDs() {//transaction id using random generated numbers
         //System.out.println(uniqueID);
         try {
             SecureRandom prng = SecureRandom.getInstance("SHA1PRNG");
@@ -1087,6 +1103,7 @@ public class mainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1104,6 +1121,7 @@ public class mainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblExit;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblPrice;
+    private javax.swing.JLabel lblSeller;
     private javax.swing.JLabel lblTime;
     private javax.swing.JLabel lblTotStock;
     private javax.swing.JLabel lblTotal;
@@ -1123,4 +1141,6 @@ public class mainFrame extends javax.swing.JFrame {
     /**
      * @return the quant
      */
+  
+    
 }

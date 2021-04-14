@@ -18,7 +18,7 @@ public class POSCnsl {
     /**
      * @param args the command line arguments
      */
-        
+            //panel changer
             static final void panelChanger(JPanel parentPanel, JPanel panel) {
                 parentPanel.removeAll();
                 parentPanel.repaint();
@@ -28,6 +28,7 @@ public class POSCnsl {
                 parentPanel.revalidate();
 
             }
+            //labels in exit,taskOption
             static final void aesthetic(JLabel label, int checker, Color any) {
                 label.setBorder(javax.swing.BorderFactory.createBevelBorder(checker));
                 label.setForeground(any);
