@@ -9,15 +9,20 @@ import java.awt.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import net.proteanit.sql.DbUtils;
 import static poscnsl2.POSCnsl.panelChanger;
 import static poscnsl2.POSCnsl.aesthetic;
 import static poscnsl2.LoginSystem.con;
+import static poscnsl2.POSCnsl.checkerExist;
+import static poscnsl2.POSCnsl.tableUpdates;
+import javax.swing.RowFilter;
 
 /**
  *
@@ -28,13 +33,14 @@ public class taskPanel extends javax.swing.JPanel {
     /**
      * Creates new form optionPanel
      */
-    static taskPanel task = new taskPanel();
+    private static final taskPanel task = new taskPanel();
     mainFrame f = mainFrame.getInstance();
 
     private taskPanel() {
         initComponents();
     }
-
+/*DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
+        String monthString = monthFormatter.format(Month.of(jMonthChooser1.getMonth() + 1));*/
     public static taskPanel getInstance() {
         return task;
     }
@@ -50,10 +56,6 @@ public class taskPanel extends javax.swing.JPanel {
 
         lblViewTab = new javax.swing.JLabel();
         panelTable = new javax.swing.JPanel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jMonthChooser1 = new com.toedter.calendar.JMonthChooser();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        tableMonth = new javax.swing.JTable();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
@@ -62,6 +64,10 @@ public class taskPanel extends javax.swing.JPanel {
         lblBack = new javax.swing.JLabel();
         panelTables = new javax.swing.JPanel();
         TransPanel = new javax.swing.JPanel();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableMonth = new javax.swing.JTable();
+        bView = new javax.swing.JButton();
         crudPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tableAddItem = new javax.swing.JTable();
@@ -105,26 +111,6 @@ public class taskPanel extends javax.swing.JPanel {
         panelTable.setBackground(new java.awt.Color(255, 255, 255));
         panelTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jDateChooser1.setDateFormatString("MM-dd-yyyy");
-        jDateChooser1.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-
-        jMonthChooser1.setDayChooser(null);
-        jMonthChooser1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jMonthChooser1PropertyChange(evt);
-            }
-        });
-
-        tableMonth.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Transaction ID", "Seller", "Time", "Date"
-            }
-        ));
-        jScrollPane3.setViewportView(tableMonth);
-
         jLabel13.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
         jLabel13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -143,35 +129,19 @@ public class taskPanel extends javax.swing.JPanel {
             panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTableLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelTableLayout.createSequentialGroup()
-                        .addGroup(panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelTableLayout.createSequentialGroup()
-                                .addComponent(jLabel16)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelTableLayout.createSequentialGroup()
-                                .addComponent(jMonthChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 162, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addComponent(jLabel16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(172, Short.MAX_VALUE))
         );
         panelTableLayout.setVerticalGroup(
             panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTableLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jMonthChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addGap(518, 518, 518)
                 .addGroup(panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -200,15 +170,56 @@ public class taskPanel extends javax.swing.JPanel {
 
         TransPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jDateChooser1.setDateFormatString("MM-dd-yyyy");
+        jDateChooser1.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+
+        tableMonth.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Transaction ID", "Seller", "Total", "Date"
+            }
+        ));
+        jScrollPane3.setViewportView(tableMonth);
+
+        bView.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        bView.setText("View");
+        bView.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bViewActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout TransPanelLayout = new javax.swing.GroupLayout(TransPanel);
         TransPanel.setLayout(TransPanelLayout);
         TransPanelLayout.setHorizontalGroup(
             TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
+            .addGroup(TransPanelLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(bView, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(339, Short.MAX_VALUE))
+            .addGroup(TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(TransPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane3)
+                    .addContainerGap()))
         );
         TransPanelLayout.setVerticalGroup(
             TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 606, Short.MAX_VALUE)
+            .addGroup(TransPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bView)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(545, Short.MAX_VALUE))
+            .addGroup(TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(TransPanelLayout.createSequentialGroup()
+                    .addGap(55, 55, 55)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
 
         panelTables.add(TransPanel, "card4");
@@ -389,7 +400,7 @@ public class taskPanel extends javax.swing.JPanel {
         accountPanel.setLayout(accountPanelLayout);
         accountPanelLayout.setHorizontalGroup(
             accountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
+            .addGap(0, 724, Short.MAX_VALUE)
         );
         accountPanelLayout.setVerticalGroup(
             accountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -500,7 +511,7 @@ public class taskPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 722, Short.MAX_VALUE)
+            .addGap(0, 746, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -531,13 +542,6 @@ public class taskPanel extends javax.swing.JPanel {
         aesthetic(lblBack, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_lblBackMouseExited
 
-    private void jMonthChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jMonthChooser1PropertyChange
-        // TODO add your handling code here:
-        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
-        String monthString = monthFormatter.format(Month.of(jMonthChooser1.getMonth() + 1));
-        //System.out.println(monthString);
-    }//GEN-LAST:event_jMonthChooser1PropertyChange
-
     private void tableAddItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAddItemMouseClicked
         //if table got click print all rows in fields
         DefaultTableModel model = (DefaultTableModel) tableAddItem.getModel();
@@ -555,10 +559,10 @@ public class taskPanel extends javax.swing.JPanel {
         // ADD items in database
         PreparedStatement ps;
         ResultSet rs;
-        if(checkFields()){// check if fields are not null or empty
+        if (checkFields()) {// check if fields are not null or empty
             JOptionPane.showMessageDialog(null, "Input Somethin first");
         } else {
-            if (!checkItem(tfAddItemName.getText())) { // check item if its already exist
+            if (!checkerExist(tfAddItemName.getText(), "itemLists", "itemName")) { // check item if its already exist
                 try {
                     con.beginRequest();
                     String query1 = "insert into itemLists(code,itemName,itemQuantity,itemPrice,itemStock)values('" + tfAddItemCode.getText()
@@ -711,43 +715,48 @@ public class taskPanel extends javax.swing.JPanel {
 
     private void lblaccManagerMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblaccManagerMouseEntered
         // TODO add your handling code here:
-        lblaccManager.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         aesthetic(lblaccManager, BevelBorder.LOWERED, Color.red);
     }//GEN-LAST:event_lblaccManagerMouseEntered
 
     private void lblaccManagerMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblaccManagerMouseExited
         // TODO add your handling code here:
-        lblaccManager.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         aesthetic(lblaccManager, BevelBorder.RAISED, Color.black);
     }//GEN-LAST:event_lblaccManagerMouseExited
 
-    private boolean checkItem(String input) {//check item in database if not exist = save it
+    private void bViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bViewActionPerformed
+        // TODO add your handling code here:
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+        String date = sdf.format(jDateChooser1.getDate());
         PreparedStatement pst;
+       
         ResultSet rs;
-        boolean user_exist = false;
-
-        try {
-            con.beginRequest();
-            String query = "SELECT * FROM `itemLists` WHERE `itemName` = ?";
-            pst = con.prepareStatement(query);
-            pst.setString(1, input);
-            rs = pst.executeQuery();
-
-            if (rs.next()) {
-                user_exist = true;
-                JOptionPane.showMessageDialog(null, "Item already Exist", "Saving Item Failed", 2);
-
+        if (date == null || date.isBlank()) {
+            transTable();
+        } else {
+            try {
+                transTable();
+                con.beginRequest();
+                DefaultTableModel table = (DefaultTableModel) tableMonth.getModel();  //table sorter
+                TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(table);
+                tableMonth.setRowSorter(tr);
+                tr.setRowFilter(RowFilter.regexFilter(date.trim()));
+                String sql = "Select TransID as Transaction_ID,Seller,TransPrice as Total,transDate as Date from tableofTrans";
+                pst = con.prepareStatement(sql);
+                rs = pst.executeQuery();
+                tableMonth.setModel(DbUtils.resultSetToTableModel(rs));
+                con.endRequest();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e);
             }
-            rs.close();
-            con.endRequest();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
         }
-        return user_exist;
-    }
+
+    }//GEN-LAST:event_bViewActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel TransPanel;
     private javax.swing.JPanel accountPanel;
+    private javax.swing.JButton bView;
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnUpdate;
@@ -763,7 +772,6 @@ public class taskPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
-    private com.toedter.calendar.JMonthChooser jMonthChooser1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblAddID;
@@ -786,20 +794,13 @@ public class taskPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void updateItems() {// print all data in itemName in tableAddItem
-        try {
-            con.beginRequest();
-            PreparedStatement pst;
-            ResultSet rs;
-            //   String sql = "select * from itemLists";
-            String sql = "select ID,itemName as Item,code as Code,itemQuantity as Quantity,itemPrice as Price,itemStock as Stock  from itemLists";
-            pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-            tableAddItem.setModel(DbUtils.resultSetToTableModel(rs));
-            rs.close();
-            con.endRequest();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
+        String sql = "select ID,itemName as Item,code as Code,itemQuantity as Quantity,itemPrice as Price,itemStock as Stock  from itemLists";
+        tableUpdates(tableAddItem, sql);
+    }
+
+    private void transTable() {
+        String sql = "Select TransID as Transaction_ID,Seller,TransPrice as Total,transDate as Date from tableofTrans";
+        tableUpdates(tableMonth, sql);
     }
 
     public void clear() {//clear fields

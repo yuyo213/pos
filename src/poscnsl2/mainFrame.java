@@ -13,17 +13,19 @@ import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.awt.event.KeyEvent;
+import java.awt.print.PrinterException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import net.proteanit.sql.DbUtils;
 import javax.swing.border.BevelBorder;
 import static poscnsl2.POSCnsl.panelChanger;
 import static poscnsl2.POSCnsl.aesthetic;
 import static poscnsl2.LoginSystem.con;
+import static poscnsl2.POSCnsl.tableUpdates;
+
 /**
  *
  * @author Butaw
@@ -50,7 +52,7 @@ public final class mainFrame extends javax.swing.JFrame {
     public JPanel getFramePanel() {
         return PanelFrame;
     }
-   
+
     Date d = new Date();
     SimpleDateFormat dbD = new SimpleDateFormat("MM-dd-yyyy");
     private final String dbDate = dbD.format(d);
@@ -68,7 +70,7 @@ public final class mainFrame extends javax.swing.JFrame {
         tfItemCode.requestFocus();
         transIDs();
         updateTableStock();
-        bReset.setEnabled(false);
+        bNewTransaction.setEnabled(false);
     }
 
     public static mainFrame getInstance() {
@@ -98,7 +100,7 @@ public final class mainFrame extends javax.swing.JFrame {
         opPanel = new javax.swing.JPanel();
         baddItem = new javax.swing.JButton();
         bcashOut = new javax.swing.JButton();
-        bReset = new javax.swing.JButton();
+        bNewTransaction = new javax.swing.JButton();
         bOption = new javax.swing.JButton();
         bItemViewer = new javax.swing.JButton();
         bDelete = new javax.swing.JButton();
@@ -204,11 +206,11 @@ public final class mainFrame extends javax.swing.JFrame {
             }
         });
 
-        bReset.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        bReset.setText("New Transaction");
-        bReset.addActionListener(new java.awt.event.ActionListener() {
+        bNewTransaction.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        bNewTransaction.setText("New Transaction");
+        bNewTransaction.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bResetActionPerformed(evt);
+                bNewTransactionActionPerformed(evt);
             }
         });
 
@@ -245,7 +247,7 @@ public final class mainFrame extends javax.swing.JFrame {
                 .addGroup(opPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(bItemViewer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(bOption, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(bReset, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                    .addComponent(bNewTransaction, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                     .addComponent(bcashOut, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(baddItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(bDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -263,7 +265,7 @@ public final class mainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bcashOut, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(bReset, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(bNewTransaction, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bItemViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
@@ -470,9 +472,9 @@ public final class mainFrame extends javax.swing.JFrame {
         jPanel1.setBounds(280, 130, 410, 110);
 
         jLabel13.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        jLabel13.setText("Seller Name:");
+        jLabel13.setText("Cashier Name:");
         pricePanel.add(jLabel13);
-        jLabel13.setBounds(20, 10, 100, 20);
+        jLabel13.setBounds(20, 10, 110, 20);
 
         lblSeller.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         lblSeller.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -505,10 +507,8 @@ public final class mainFrame extends javax.swing.JFrame {
                     .addComponent(pricePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 702, Short.MAX_VALUE)
                     .addGroup(MainPanelLayout.createSequentialGroup()
                         .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(searchPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(MainPanelLayout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(searchPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(opPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -602,14 +602,33 @@ public final class mainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bResetActionPerformed
+    private void bNewTransactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNewTransactionActionPerformed
         // RESET or new transaction (need to save the transac. to database!)
+        PreparedStatement pst;
         int input = JOptionPane.showOptionDialog(null, "New Transaction?", "Saving Transaction",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, null, null);
         if (input == JOptionPane.OK_OPTION) {
             DefaultTableModel model = (DefaultTableModel) tableSoldItems.getModel();
-            // model.getDataVector().removeAllElements();
+            try {
+                String query = "Insert into tableofTrans(transID,Seller,transPrice,TransMoney,transDate)values(?,?,?,?,?)";
+                pst = con.prepareStatement(query);
+                pst.setString(1, lblTransaction.getText());
+                pst.setString(2, lblSeller.getText());
+                pst.setString(3, lblTotal.getText());
+                pst.setDouble(4, getEquals());
+                pst.setString(5, dbDate);
+                pst.execute();
+                pst.close();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+            stockUpdate();
+            try {
+                tableSoldItems.print();
+            } catch (PrinterException e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
             model.fireTableDataChanged();
             while (model.getRowCount() > 0) {
                 model.removeRow(0);
@@ -622,11 +641,31 @@ public final class mainFrame extends javax.swing.JFrame {
             baddItem.setEnabled(true);
             bDelete.setEnabled(true);
             bcashOut.setEnabled(true);
-            bReset.setEnabled(false);
+            bNewTransaction.setEnabled(false);
             transIDs();
         }
-    }//GEN-LAST:event_bResetActionPerformed
-
+    }//GEN-LAST:event_bNewTransactionActionPerformed
+    private void stockUpdate() {// updating stock when new transaction action event happen
+        PreparedStatement pst;
+        int row = tableStock.getRowCount();
+        try {
+            con.beginRequest();
+            String query = "Update itemLists set itemStock=? where ID=?";
+            pst = con.prepareStatement(query);
+            for (int i = 0; i < row; i++) {
+                int stock = (int) tableStock.getValueAt(i, 2);
+                int id = (int) tableStock.getValueAt(i, 0);
+                pst.setInt(1, stock);
+                pst.setInt(2, id);
+                pst.executeUpdate();
+            }
+            pst.close();
+            updateTableStock();
+            con.endRequest();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
     private void bOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOptionActionPerformed
         // OPTION or portal to task panel
         //taskPanel task = new taskPanel();
@@ -639,7 +678,15 @@ public final class mainFrame extends javax.swing.JFrame {
 
         panelChanger(PanelFrame, itemViewer);
     }//GEN-LAST:event_bItemViewerActionPerformed
+    private double equals;
 
+    public void setEquals(double equals) {
+        this.equals = equals;
+    }
+
+    public double getEquals() {
+        return equals;
+    }
     private void bcashOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bcashOutActionPerformed
         // putting money exchange
 
@@ -656,11 +703,12 @@ public final class mainFrame extends javax.swing.JFrame {
                     if (tMoney < totalofItem || money.equals("0")) {
                         JOptionPane.showMessageDialog(null, "Please Try again", "Invalid", 2);
                     } else {
-                        double equals = tMoney - totalofItem;
-                        lblExchange.setText(Double.toString(equals));
+                        setEquals(tMoney);
+                        double result = tMoney - totalofItem;
+                        lblExchange.setText(Double.toString(result));
                         clear();
                         ButtonSwitch();
-                        bReset.setEnabled(true);
+                        bNewTransaction.setEnabled(true);
                         lblCurStock.setText("");
                     }
                 }
@@ -709,14 +757,15 @@ public final class mainFrame extends javax.swing.JFrame {
         String itemCode = tfItemCode.getText();
         String quer = "code";
         idCode(quer, itemCode);
+        //  autoSum();
     }//GEN-LAST:event_tfItemCodeKeyReleased
 
     private void tfIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfIDKeyReleased
         numberonly(evt);
-        PreparedStatement pst;
         String idKey = tfID.getText();
         String quer = "ID";
         idCode(quer, idKey);
+        //  autoSum();
     }//GEN-LAST:event_tfIDKeyReleased
 
     private void tfIDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfIDKeyTyped
@@ -726,6 +775,7 @@ public final class mainFrame extends javax.swing.JFrame {
     private void tfQuantityKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfQuantityKeyTyped
         numberonly(evt);
     }//GEN-LAST:event_tfQuantityKeyTyped
+
 
     private void baddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baddItemActionPerformed
         //adding the item
@@ -903,20 +953,8 @@ public final class mainFrame extends javax.swing.JFrame {
     }
 
     private void updateTableStock() {// get the database columns and its rows
-        PreparedStatement pst;
-        ResultSet rs;
-        try {
-            con.beginRequest();
-            //   String sql = "select * from itemLists";
-            String sql = "select ID,itemName as Name,itemStock as Stock from itemLists";
-            pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
-            tableStock.setModel(DbUtils.resultSetToTableModel(rs));
-            rs.close();
-            con.endRequest();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
+        String sql = "select ID,itemName as Name,itemStock as Stock from itemLists";
+        tableUpdates(tableStock, sql);
     }
 
     private void operators(char operator, String iName, String bItem) {//checking stock in the itemviewer if stock not enough 
@@ -928,20 +966,18 @@ public final class mainFrame extends javax.swing.JFrame {
                     int tStock = (int) tableStock.getValueAt(i, 2);
                     int num2 = Integer.parseInt(bItem);
                     switch (operator) {
-                        case '+' -> {//for delete button to add up the deleted item stock
+                        case '+'://for delete button to add up the deleted item stock
                             int result = tStock + num2;
                             System.out.println(result);
                             tableStock.setValueAt(result, i, 2);
-                        }
-                        case '-' -> {//for add button to minus item stock
-                            int result = tStock - num2;
+                            break;
+                        case '-': //for add button to minus item stock
+                            result = tStock - num2;
                             System.out.println(result);
                             tableStock.setValueAt(result, i, 2);
-                        }
-                        default -> {
+                            break;
+                        default:
                             JOptionPane.showMessageDialog(null, "Error");
-                        }
-
                     }
 
                     int tb2 = (int) tb1.getValueAt(i, 2);
@@ -965,7 +1001,7 @@ public final class mainFrame extends javax.swing.JFrame {
     }
 
     private void idCode(String value, String sText) {
-    //searching id or code in the database if exist fill the fields with its contents
+        //searching id or code in the database if exist fill the fields with its contents
 
         PreparedStatement pst;
         ResultSet rs;
@@ -984,7 +1020,7 @@ public final class mainFrame extends javax.swing.JFrame {
                 lblTotStock.setText(Integer.toString(rs.getInt("itemStock")));
 
                 CurStock();
-                //  autoSum();
+                autoSum();
             } else if (flg == 0) {
                 flg = 1;
                 clear();
@@ -1024,9 +1060,11 @@ public final class mainFrame extends javax.swing.JFrame {
         };
         t.start();
     }
-    public void user(String name){
-       lblSeller.setText(name);
+
+    public void user(String name) {
+        lblSeller.setText(name);
     }
+
     private void transIDs() {//transaction id using random generated numbers
         //System.out.println(uniqueID);
         try {
@@ -1094,8 +1132,8 @@ public final class mainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel PanelFrame;
     private javax.swing.JButton bDelete;
     private javax.swing.JButton bItemViewer;
+    private javax.swing.JButton bNewTransaction;
     private javax.swing.JButton bOption;
-    private javax.swing.JButton bReset;
     private javax.swing.JButton baddItem;
     private javax.swing.JButton bcashOut;
     private javax.swing.JPanel itemViewer;
@@ -1138,9 +1176,4 @@ public final class mainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField tfQuantity;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * @return the quant
-     */
-  
-    
 }

@@ -5,7 +5,9 @@
  */
 package poscnsl2;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  *
@@ -20,12 +22,9 @@ public class My_Connection {
         try {
             Class.forName("org.sqlite.JDBC");
             Connection con = DriverManager.getConnection("jdbc:sqlite:db.db");
-            //Connection cons=DriverManager.getConnection("jdbc:sqlite:data2.db");
-             System.err.println("Connection Successful!");
-//					JOptionPane.showMessageDialog(null, "Connection Succesful");
+             System.err.println("Connection Successful!");			
             return con;
-        } catch (Exception e) {
-            //JOptionPane.showMessageDialog(null, e);
+        } catch (ClassNotFoundException | SQLException e) {
             System.out.println(e);
             return null;
         }
