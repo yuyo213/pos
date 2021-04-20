@@ -10,8 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
@@ -39,7 +37,8 @@ public class taskPanel extends javax.swing.JPanel {
     private taskPanel() {
         initComponents();
     }
-/*DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
+
+    /*DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
         String monthString = monthFormatter.format(Month.of(jMonthChooser1.getMonth() + 1));*/
     public static taskPanel getInstance() {
         return task;
@@ -68,6 +67,7 @@ public class taskPanel extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         tableMonth = new javax.swing.JTable();
         bView = new javax.swing.JButton();
+        bView1 = new javax.swing.JButton();
         crudPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tableAddItem = new javax.swing.JTable();
@@ -191,6 +191,14 @@ public class taskPanel extends javax.swing.JPanel {
             }
         });
 
+        bView1.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        bView1.setText("Clear Table");
+        bView1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bView1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout TransPanelLayout = new javax.swing.GroupLayout(TransPanel);
         TransPanel.setLayout(TransPanelLayout);
         TransPanelLayout.setHorizontalGroup(
@@ -200,7 +208,9 @@ public class taskPanel extends javax.swing.JPanel {
                 .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(bView, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(339, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bView1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(159, Short.MAX_VALUE))
             .addGroup(TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(TransPanelLayout.createSequentialGroup()
                     .addContainerGap()
@@ -212,7 +222,9 @@ public class taskPanel extends javax.swing.JPanel {
             .addGroup(TransPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bView)
+                    .addGroup(TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(bView)
+                        .addComponent(bView1))
                     .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(545, Short.MAX_VALUE))
             .addGroup(TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -586,13 +598,9 @@ public class taskPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_btnAddActionPerformed
-    private boolean checkFields() {//checker if fields are not null
-        if (tfAddItemName.getText().equals("") || tfAddItemCode.getText().equals("") || tfAddItemPrice.getText().equals("")
-                || tfAddItemQuan.getText().equals("") || tfAddItemStock.getText().equals("")) {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean checkFields() { //checker if fields are not null
+        return tfAddItemName.getText().equals("") || tfAddItemCode.getText().equals("") || tfAddItemPrice.getText().equals("")
+                || tfAddItemQuan.getText().equals("") || tfAddItemStock.getText().equals("");
     }
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         //UPDATE BUTTON
@@ -725,21 +733,21 @@ public class taskPanel extends javax.swing.JPanel {
 
     private void bViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bViewActionPerformed
         // TODO add your handling code here:
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-        String date = sdf.format(jDateChooser1.getDate());
+
         PreparedStatement pst;
-       
         ResultSet rs;
-        if (date == null || date.isBlank()) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+        if (jDateChooser1.getDate() == null) {
             transTable();
         } else {
             try {
                 transTable();
-                con.beginRequest();
+                // con.beginRequest();
                 DefaultTableModel table = (DefaultTableModel) tableMonth.getModel();  //table sorter
                 TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(table);
                 tableMonth.setRowSorter(tr);
-                tr.setRowFilter(RowFilter.regexFilter(date.trim()));
+                tr.setRowFilter(RowFilter.regexFilter(sdf.format(jDateChooser1.getDate())));
                 String sql = "Select TransID as Transaction_ID,Seller,TransPrice as Total,transDate as Date from tableofTrans";
                 pst = con.prepareStatement(sql);
                 rs = pst.executeQuery();
@@ -752,11 +760,24 @@ public class taskPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_bViewActionPerformed
 
+    private void bView1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bView1ActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) tableMonth.getModel();
+        model.fireTableDataChanged();
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
+        tableMonth.revalidate();
+        jDateChooser1.setDate(null);
+        transTable();
+    }//GEN-LAST:event_bView1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel TransPanel;
     private javax.swing.JPanel accountPanel;
     private javax.swing.JButton bView;
+    private javax.swing.JButton bView1;
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnUpdate;
@@ -799,7 +820,7 @@ public class taskPanel extends javax.swing.JPanel {
     }
 
     private void transTable() {
-        String sql = "Select TransID as Transaction_ID,Seller,TransPrice as Total,transDate as Date from tableofTrans";
+        String sql = "Select transID as Transaction_ID,Seller,transPrice as Total,transDate as Date from tableofTrans";
         tableUpdates(tableMonth, sql);
     }
 

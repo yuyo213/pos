@@ -17,13 +17,15 @@ import java.awt.print.PrinterException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.HashMap;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.BevelBorder;
+import net.proteanit.sql.DbUtils;
+import static poscnsl2.LoginSystem.con;
 import static poscnsl2.POSCnsl.panelChanger;
 import static poscnsl2.POSCnsl.aesthetic;
-import static poscnsl2.LoginSystem.con;
 import static poscnsl2.POSCnsl.tableUpdates;
 
 /**
@@ -56,7 +58,7 @@ public final class mainFrame extends javax.swing.JFrame {
     Date d = new Date();
     SimpleDateFormat dbD = new SimpleDateFormat("MM-dd-yyyy");
     private final String dbDate = dbD.format(d);
-
+    private int totalStock;
     private static final mainFrame main = new mainFrame();
 
     private mainFrame() {
@@ -69,8 +71,9 @@ public final class mainFrame extends javax.swing.JFrame {
         setResizable(false);
         tfItemCode.requestFocus();
         transIDs();
-        updateTableStock();
+        updateTableStock(tableStock);
         bNewTransaction.setEnabled(false);
+        updateTableStock(jTable1);
     }
 
     public static mainFrame getInstance() {
@@ -139,6 +142,8 @@ public final class mainFrame extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tableStock = new javax.swing.JTable();
         ItemBack = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -519,7 +524,7 @@ public final class mainFrame extends javax.swing.JFrame {
             MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pricePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                .addComponent(pricePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(MainPanelLayout.createSequentialGroup()
@@ -574,6 +579,19 @@ public final class mainFrame extends javax.swing.JFrame {
             }
         });
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(jTable1);
+
         javax.swing.GroupLayout itemViewerLayout = new javax.swing.GroupLayout(itemViewer);
         itemViewer.setLayout(itemViewerLayout);
         itemViewerLayout.setHorizontalGroup(
@@ -584,6 +602,10 @@ public final class mainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tablePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(itemViewerLayout.createSequentialGroup()
+                .addGap(92, 92, 92)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         itemViewerLayout.setVerticalGroup(
             itemViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -592,7 +614,9 @@ public final class mainFrame extends javax.swing.JFrame {
                 .addGroup(itemViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tablePanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ItemBack))
-                .addContainerGap(594, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(174, Short.MAX_VALUE))
         );
 
         PanelFrame.add(itemViewer, "card4");
@@ -616,19 +640,22 @@ public final class mainFrame extends javax.swing.JFrame {
                 pst.setString(1, lblTransaction.getText());
                 pst.setString(2, lblSeller.getText());
                 pst.setString(3, lblTotal.getText());
-                pst.setDouble(4, getEquals());
+                pst.setFloat(4, getEquals());
                 pst.setString(5, dbDate);
                 pst.execute();
                 pst.close();
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
+
             stockUpdate();
             try {
                 tableSoldItems.print();
             } catch (PrinterException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
+            updateTableStock(jTable1);
+            updateTableStock(tableStock);
             model.fireTableDataChanged();
             while (model.getRowCount() > 0) {
                 model.removeRow(0);
@@ -660,7 +687,7 @@ public final class mainFrame extends javax.swing.JFrame {
                 pst.executeUpdate();
             }
             pst.close();
-            updateTableStock();
+            updateTableStock(tableStock);
             con.endRequest();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
@@ -678,13 +705,13 @@ public final class mainFrame extends javax.swing.JFrame {
 
         panelChanger(PanelFrame, itemViewer);
     }//GEN-LAST:event_bItemViewerActionPerformed
-    private double equals;
+    private float equals;
 
-    public void setEquals(double equals) {
+    public void setEquals(float equals) {
         this.equals = equals;
     }
 
-    public double getEquals() {
+    public float getEquals() {
         return equals;
     }
     private void bcashOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bcashOutActionPerformed
@@ -695,8 +722,8 @@ public final class mainFrame extends javax.swing.JFrame {
         } else {
             try {
                 String money = JOptionPane.showInputDialog("Input Money");
-                double tMoney = Double.parseDouble(money);
-                double totalofItem = Double.parseDouble(lblTotal.getText());
+                float tMoney = Float.parseFloat(money);
+                float totalofItem = Float.parseFloat(lblTotal.getText());
                 if (money == null || (" ".equals(money))) {
                     throw new Exception("empty Fields");
                 } else {
@@ -704,8 +731,8 @@ public final class mainFrame extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Please Try again", "Invalid", 2);
                     } else {
                         setEquals(tMoney);
-                        double result = tMoney - totalofItem;
-                        lblExchange.setText(Double.toString(result));
+                        float result = tMoney - totalofItem;
+                        lblExchange.setText(Float.toString(result));
                         clear();
                         ButtonSwitch();
                         bNewTransaction.setEnabled(true);
@@ -785,18 +812,18 @@ public final class mainFrame extends javax.swing.JFrame {
                 || lblPrice.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "No selected item");
         } else {
-            Double numPrice = Double.parseDouble(lblPrice.getText());
-            Double numQuantity = Double.parseDouble(getTfQuantity().getText());
-            Double resultPrice = numPrice * numQuantity;
+            float numPrice = Float.parseFloat(lblPrice.getText());
+            float numQuantity = Float.parseFloat(getTfQuantity().getText());
+            float resultPrice = numPrice * numQuantity;
             dtm.addRow(new Object[]{lblName.getText(), resultPrice,
                 getTfQuantity().getText(), dbDate});// put object
             tableSoldItems.changeSelection(row, 1, false, false);
             //jTable1.setRowSelectionAllowed(true);
             String itemName = (String) dtm.getValueAt(row, 0);
             String bItem = (String) dtm.getValueAt(row, 2);
-            // test();
             char minus = '-';
             operators(minus, itemName, bItem);
+            itemCheckerADD();
         }
         clear();
         tfItemCode.setText("");
@@ -804,27 +831,20 @@ public final class mainFrame extends javax.swing.JFrame {
         getSum();
 
     }//GEN-LAST:event_baddItemActionPerformed
-    public void test() {
-        int row = tableSoldItems.getSelectedRow();
-        int srow = tableStock.getRowCount();
-        for (int i = 0; i < srow; i++) {
-            String name = (String) tableStock.getValueAt(i, 1);
-            if (tableSoldItems.getValueAt(row, 0).equals(name)) {
 
-            }
-        }
-    }
+
     private void bDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDeleteActionPerformed
         // TODO add your handling code here:
         DefaultTableModel dtm = (DefaultTableModel) tableSoldItems.getModel();
         int i = tableSoldItems.getSelectedRow();
         if (i >= 0) {
 
-            String iName = (String) tableSoldItems.getValueAt(i, 0);
-            String Squant = (String) tableSoldItems.getValueAt(i, 2);
+            String iName = (String) dtm.getValueAt(i, 0);
+            Object Squant = dtm.getValueAt(i, 2);
             char op = '+';
-            operators(op, iName, Squant);
-
+            operators(op, iName, Squant.toString());
+            deleteSold();
+            fieldItemChecker(lblTransaction.getText(), lblName.getText());
             dtm.removeRow(i);
         } else {
             JOptionPane.showMessageDialog(null, "Delete Error");
@@ -832,7 +852,18 @@ public final class mainFrame extends javax.swing.JFrame {
         getSum();
 
     }//GEN-LAST:event_bDeleteActionPerformed
-
+    private void deleteSold() {
+        PreparedStatement pst;
+        try {
+            con.beginRequest();
+            String query = "DELETE FROM transLists where transactionID="+lblTransaction.getText()+"";
+            pst = con.prepareStatement(query);
+            pst.executeUpdate();
+            con.endRequest();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
     private void lblExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblExitMouseClicked
         closeWin();
     }//GEN-LAST:event_lblExitMouseClicked
@@ -952,9 +983,87 @@ public final class mainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void updateTableStock() {// get the database columns and its rows
+    private void updateTableStock(JTable table) {// get the database columns and its rows
         String sql = "select ID,itemName as Name,itemStock as Stock from itemLists";
-        tableUpdates(tableStock, sql);
+        tableUpdates(table, sql);
+    }
+
+    private void itemCheckerADD() {//checker
+        PreparedStatement pst;
+        getTfQuantity();
+        if (!fieldItemChecker(lblTransaction.getText(), lblName.getText())) {//checking if the item existed in current transaction if not procced down
+            try {//insert new item in transaction 
+                con.beginRequest();
+                String query = "Insert into transLists(transactionID,tName,tQuant,tPrice,date)values(?,?,?,?,?)";
+                pst = con.prepareStatement(query);
+                pst.setString(1, lblTransaction.getText());
+                pst.setString(2, lblName.getText());
+                pst.setString(3, tfQuantity.getText());
+                pst.setString(4, lblPrice.getText());
+                pst.setString(5, dbDate);
+                pst.execute();
+                con.endRequest();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }
+
+    private boolean fieldItemChecker(String id, String name) {//will check if item is in db or not
+        PreparedStatement pst;
+        ResultSet rs;
+        boolean user_exist = false;
+        try {
+            con.beginRequest();
+            String query = "SELECT * FROM transLists  WHERE  transactionID = ? AND tName =?";
+            pst = con.prepareStatement(query);
+            pst.setString(1, id);
+            pst.setString(2, name);
+            rs = pst.executeQuery();
+
+            if (rs.next()) {// if item exist procced to this
+                user_exist = true;
+                checker(getTotal(), lblTransaction.getText(), lblName.getText());
+
+            }
+            con.endRequest();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        return user_exist;
+    }
+
+    private void checker(int quan, String id, String name) {//will update the item quantity of item!
+        PreparedStatement pst;
+
+        try {// set quantity where transaction id and name is being search
+            con.beginRequest();
+            String query = "Update transLists set tQuant='" + quan + "'  WHERE transactionID  =" + id + "  AND tName ='" + name + "'";
+            pst = con.prepareStatement(query);
+            pst.executeUpdate();
+            con.endRequest();
+            tableSold();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+
+    }
+
+    private void tableSold() {// table update on tableSoldItems where transaction id is needed
+        PreparedStatement pst;
+        ResultSet rs;
+        try {
+            con.beginRequest();
+            String query = "Select tName as Item_Name,tPrice as Price,tQuant as Quantity,date as Date from transLists Where transactionID = ?";
+            pst = con.prepareStatement(query);
+            pst.setString(1, lblTransaction.getText());
+            rs = pst.executeQuery();
+            tableSoldItems.setModel(DbUtils.resultSetToTableModel(rs));
+            rs.close();
+            con.endRequest();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }
 
     private void operators(char operator, String iName, String bItem) {//checking stock in the itemviewer if stock not enough 
@@ -969,11 +1078,13 @@ public final class mainFrame extends javax.swing.JFrame {
                         case '+'://for delete button to add up the deleted item stock
                             int result = tStock + num2;
                             System.out.println(result);
+                            setTotal((int) jTable1.getValueAt(i, 2) - result);
                             tableStock.setValueAt(result, i, 2);
                             break;
                         case '-': //for add button to minus item stock
                             result = tStock - num2;
                             System.out.println(result);
+                            setTotal((int) jTable1.getValueAt(i, 2) - result);
                             tableStock.setValueAt(result, i, 2);
                             break;
                         default:
@@ -1002,7 +1113,7 @@ public final class mainFrame extends javax.swing.JFrame {
 
     private void idCode(String value, String sText) {
         //searching id or code in the database if exist fill the fields with its contents
-
+        HashMap<Integer, String> map = new HashMap<>();
         PreparedStatement pst;
         ResultSet rs;
         int flg = 0;
@@ -1018,7 +1129,6 @@ public final class mainFrame extends javax.swing.JFrame {
                 lblPrice.setText(Float.toString(iPrice));
                 getTfQuantity().setText(rs.getString("itemQuantity"));
                 lblTotStock.setText(Integer.toString(rs.getInt("itemStock")));
-
                 CurStock();
                 autoSum();
             } else if (flg == 0) {
@@ -1089,14 +1199,6 @@ public final class mainFrame extends javax.swing.JFrame {
         bOption.setEnabled(false);
     }
 
-    /*  private void userLog(String userActive) {
-
-        PreparedStatement pst;
-        ResultSet rs;
-        String query = "INSERT into tableofTrans \n"
-                + "(Seller) SELECT uName from userLogin \n"
-                + "WHERE uName='" + userActive + "'";
-    }*/
     /**
      * @param args the command line arguments
      */
@@ -1153,6 +1255,8 @@ public final class mainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblCurStock;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblExchange;
@@ -1176,4 +1280,11 @@ public final class mainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField tfQuantity;
     // End of variables declaration//GEN-END:variables
 
+    public void setTotal(int total) {
+        this.totalStock = total;
+    }
+
+    public int getTotal() {
+        return totalStock;
+    }
 }
