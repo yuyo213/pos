@@ -7,20 +7,12 @@ package poscnsl2;
 
 import java.awt.Color;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-import net.proteanit.sql.DbUtils;
 import static poscnsl2.POSCnsl.panelChanger;
 import static poscnsl2.POSCnsl.aesthetic;
-import static poscnsl2.LoginSystem.con;
-import static poscnsl2.POSCnsl.checkerExist;
-import static poscnsl2.POSCnsl.tableUpdates;
-import javax.swing.RowFilter;
+import java.sql.Connection;
 
 /**
  *
@@ -28,14 +20,19 @@ import javax.swing.RowFilter;
  */
 public class taskPanel extends javax.swing.JPanel {
 
+    Connection con;
     /**
      * Creates new form optionPanel
      */
     private static final taskPanel task = new taskPanel();
-    mainFrame f = mainFrame.getInstance();
+    mainFrame f;
+    taskPanelEvents tEvt;
 
     private taskPanel() {
         initComponents();
+        f = mainFrame.getInstance();
+        tEvt = taskPanelEvents.getInstance();
+
     }
 
     /*DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
@@ -67,7 +64,6 @@ public class taskPanel extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         tableMonth = new javax.swing.JTable();
         bView = new javax.swing.JButton();
-        bView1 = new javax.swing.JButton();
         crudPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tableAddItem = new javax.swing.JTable();
@@ -150,6 +146,8 @@ public class taskPanel extends javax.swing.JPanel {
                 .addContainerGap(61, Short.MAX_VALUE))
         );
 
+        setPreferredSize(new java.awt.Dimension(720, 778));
+
         lblBack.setBackground(new java.awt.Color(204, 204, 204));
         lblBack.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         lblBack.setText("   Back");
@@ -191,14 +189,6 @@ public class taskPanel extends javax.swing.JPanel {
             }
         });
 
-        bView1.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        bView1.setText("Clear Table");
-        bView1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bView1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout TransPanelLayout = new javax.swing.GroupLayout(TransPanel);
         TransPanel.setLayout(TransPanelLayout);
         TransPanelLayout.setHorizontalGroup(
@@ -208,9 +198,7 @@ public class taskPanel extends javax.swing.JPanel {
                 .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(bView, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(bView1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(159, Short.MAX_VALUE))
+                .addContainerGap(314, Short.MAX_VALUE))
             .addGroup(TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(TransPanelLayout.createSequentialGroup()
                     .addContainerGap()
@@ -222,15 +210,13 @@ public class taskPanel extends javax.swing.JPanel {
             .addGroup(TransPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(bView)
-                        .addComponent(bView1))
+                    .addComponent(bView)
                     .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(545, Short.MAX_VALUE))
+                .addContainerGap(581, Short.MAX_VALUE))
             .addGroup(TransPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(TransPanelLayout.createSequentialGroup()
                     .addGap(55, 55, 55)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
@@ -242,10 +228,7 @@ public class taskPanel extends javax.swing.JPanel {
 
         tableAddItem.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
@@ -319,45 +302,51 @@ public class taskPanel extends javax.swing.JPanel {
         crudPanelLayout.setHorizontalGroup(
             crudPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(crudPanelLayout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addComponent(jLabel17)
-                .addGap(18, 18, 18)
-                .addComponent(tfAddItemName, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(crudPanelLayout.createSequentialGroup()
-                .addGap(98, 98, 98)
-                .addComponent(jLabel18)
-                .addGap(18, 18, 18)
-                .addComponent(tfAddItemPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(crudPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(crudPanelLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(crudPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel21)
-                    .addComponent(jLabel19))
-                .addGap(18, 18, 18)
-                .addGroup(crudPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfAddItemQuan, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-                    .addComponent(tfAddItemStock)))
-            .addGroup(crudPanelLayout.createSequentialGroup()
                 .addGroup(crudPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(crudPanelLayout.createSequentialGroup()
                         .addGap(66, 66, 66)
-                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(4, 4, 4))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, crudPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel17)
+                        .addGap(18, 18, 18)
+                        .addComponent(tfAddItemName, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(crudPanelLayout.createSequentialGroup()
+                        .addGap(98, 98, 98)
+                        .addComponent(jLabel18)
+                        .addGap(18, 18, 18)
+                        .addComponent(tfAddItemPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(crudPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel22)
-                        .addGap(18, 18, 18)))
-                .addGroup(crudPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfAddItemCode, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-                    .addComponent(lblAddID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(crudPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(crudPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel21)
+                            .addComponent(jLabel19))
+                        .addGap(18, 18, 18)
+                        .addGroup(crudPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tfAddItemQuan, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                            .addComponent(tfAddItemStock)))
+                    .addGroup(crudPanelLayout.createSequentialGroup()
+                        .addGroup(crudPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(crudPanelLayout.createSequentialGroup()
+                                .addGap(66, 66, 66)
+                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(4, 4, 4))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, crudPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel22)
+                                .addGap(18, 18, 18)))
+                        .addGroup(crudPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tfAddItemCode, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                            .addComponent(lblAddID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(crudPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
+                .addContainerGap())
         );
         crudPanelLayout.setVerticalGroup(
             crudPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -399,8 +388,8 @@ public class taskPanel extends javax.swing.JPanel {
                     .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(135, 135, 135)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -412,11 +401,11 @@ public class taskPanel extends javax.swing.JPanel {
         accountPanel.setLayout(accountPanelLayout);
         accountPanelLayout.setHorizontalGroup(
             accountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 724, Short.MAX_VALUE)
+            .addGap(0, 699, Short.MAX_VALUE)
         );
         accountPanelLayout.setVerticalGroup(
             accountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 606, Short.MAX_VALUE)
+            .addGap(0, 621, Short.MAX_VALUE)
         );
 
         panelTables.add(accountPanel, "card5");
@@ -500,11 +489,12 @@ public class taskPanel extends javax.swing.JPanel {
             .addGroup(panelOptionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelOptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tabPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelOptionLayout.createSequentialGroup()
-                        .addComponent(lblBack, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(panelTables, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tabPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(panelOptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblBack, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(panelTables, javax.swing.GroupLayout.PREFERRED_SIZE, 701, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 11, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panelOptionLayout.setVerticalGroup(
@@ -515,7 +505,7 @@ public class taskPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(tabPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
-                .addComponent(panelTables, javax.swing.GroupLayout.PREFERRED_SIZE, 587, Short.MAX_VALUE)
+                .addComponent(panelTables, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -523,21 +513,17 @@ public class taskPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 746, Short.MAX_VALUE)
+            .addGap(0, 732, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
                     .addComponent(panelOption, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 742, Short.MAX_VALUE)
+            .addGap(0, 778, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(panelOption, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(panelOption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -569,33 +555,16 @@ public class taskPanel extends javax.swing.JPanel {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // ADD items in database
-        PreparedStatement ps;
-        ResultSet rs;
         if (checkFields()) {// check if fields are not null or empty
             JOptionPane.showMessageDialog(null, "Input Somethin first");
         } else {
-            if (!checkerExist(tfAddItemName.getText(), "itemLists", "itemName")) { // check item if its already exist
-                try {
-                    con.beginRequest();
-                    String query1 = "insert into itemLists(code,itemName,itemQuantity,itemPrice,itemStock)values('" + tfAddItemCode.getText()
-                            + "','" + tfAddItemName.getText() + "','" + tfAddItemQuan.getText()
-                            + "','" + tfAddItemPrice.getText() + "','" + tfAddItemStock.getText() + "')";
-                    ps = con.prepareStatement(query1);
-                    int i = ps.executeUpdate();
-                    if (i >= 1) {
-                        JOptionPane.showMessageDialog(null, tfAddItemName.getText() + " Data Saved!");//if 1
-                        updateItems();
-                        clear();
-                        ps.close();
-                    } else {
-                        JOptionPane.showMessageDialog(null, tfAddItemName.getText() + "Failed to Save!");//else 1
-
-                    }
-                    con.endRequest();
-                } catch (SQLException e) {
-                    JOptionPane.showMessageDialog(null, e);
-                }
-            }
+            tEvt.setItemName(tfAddItemName.getText());
+            tEvt.setItemCode(tfAddItemCode.getText());
+            tEvt.setItemPrice(Float.parseFloat(tfAddItemPrice.getText()));
+            tEvt.setItemQuantity(Integer.parseInt(tfAddItemQuan.getText()));
+            tEvt.setItemStock(Integer.parseInt(tfAddItemStock.getText()));
+            tEvt.addButton(tableAddItem);
+            clear();
         }
     }//GEN-LAST:event_btnAddActionPerformed
     private boolean checkFields() { //checker if fields are not null
@@ -604,36 +573,17 @@ public class taskPanel extends javax.swing.JPanel {
     }
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         //UPDATE BUTTON
-        PreparedStatement ps;
-        if (checkFields()) {//check if fields are not null
+        if (checkFields() || lblAddID.getText().equals("")) {//check if fields are not null
             JOptionPane.showMessageDialog(null, "Please Complete", "Error", 2);
         } else {
-            try {
-                con.beginRequest();
-                String query = "Update itemLists set itemPrice=?,itemName=?,itemQuantity=?,itemStock=?,code=? where ID=?";
-                ps = con.prepareStatement(query);
-                ps.setString(6, lblAddID.getText());
-                ps.setString(1, tfAddItemPrice.getText());
-                ps.setString(2, tfAddItemName.getText());
-                ps.setString(3, tfAddItemQuan.getText());
-                ps.setString(4, tfAddItemStock.getText());
-                ps.setString(5, tfAddItemCode.getText());
-                ps.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Item Updated");
-                updateItems();
-                clear();
-                /*int input = JOptionPane.showOptionDialog(null, "Item Updated", "New Account",
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE, null, null, null);
-                if (input == JOptionPane.OK_OPTION) {
-
-                }*/
-                ps.close();
-                con.endRequest();
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, e);
-            }
-
+            tEvt.setItemName(tfAddItemName.getText());
+            tEvt.setItemCode(tfAddItemCode.getText());
+            tEvt.setItemPrice(Float.parseFloat(tfAddItemPrice.getText()));
+            tEvt.setItemQuantity(Integer.parseInt(tfAddItemQuan.getText()));
+            tEvt.setItemStock(Integer.parseInt(tfAddItemStock.getText()));
+            tEvt.setItemID(lblAddID.getText());
+            tEvt.updateButton(tableAddItem);
+            clear();
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -644,20 +594,9 @@ public class taskPanel extends javax.swing.JPanel {
         if (checkFields()) {
             JOptionPane.showMessageDialog(null, "No item Selected");
         } else {
-            //                String query = "delete from client_info where id=?";
-            try {
-                con.beginRequest();
-                String query = "DELETE FROM `itemLists` WHERE `code` ='" + tfAddItemCode.getText() + "'";
-                pst = con.prepareStatement(query);
-                JOptionPane.showMessageDialog(null, "Item Deleted");
-                pst.executeUpdate();
-                updateItems();
-                clear();
-                pst.close();
-                con.endRequest();
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, ex);
-            }
+            tEvt.setItemCode(tfAddItemCode.getText());
+            tEvt.deleteButton(tableAddItem);
+            clear();
         }
         //   update2();
     }//GEN-LAST:event_btnDeleteActionPerformed
@@ -685,7 +624,8 @@ public class taskPanel extends javax.swing.JPanel {
         //crud
         panelChanger(panelTables, crudPanel);
         tfAddItemCode.requestFocus();
-        updateItems();
+        tEvt.updateItems(tableAddItem);
+
     }//GEN-LAST:event_lblCrudMouseClicked
 
     private void lblCrudMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCrudMouseEntered
@@ -733,51 +673,18 @@ public class taskPanel extends javax.swing.JPanel {
 
     private void bViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bViewActionPerformed
         // TODO add your handling code here:
-
-        PreparedStatement pst;
-        ResultSet rs;
-
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-        if (jDateChooser1.getDate() == null) {
-            transTable();
-        } else {
-            try {
-                transTable();
-                // con.beginRequest();
-                DefaultTableModel table = (DefaultTableModel) tableMonth.getModel();  //table sorter
-                TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(table);
-                tableMonth.setRowSorter(tr);
-                tr.setRowFilter(RowFilter.regexFilter(sdf.format(jDateChooser1.getDate())));
-                String sql = "Select TransID as Transaction_ID,Seller,TransPrice as Total,transDate as Date from tableofTrans";
-                pst = con.prepareStatement(sql);
-                rs = pst.executeQuery();
-                tableMonth.setModel(DbUtils.resultSetToTableModel(rs));
-                con.endRequest();
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, e);
-            }
+        if (tableMonth.getModel().getRowCount() == 0) {
+            tEvt.transTable(tableMonth);
         }
+        tEvt.viewTable(tableMonth, jDateChooser1);
 
     }//GEN-LAST:event_bViewActionPerformed
-
-    private void bView1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bView1ActionPerformed
-        // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tableMonth.getModel();
-        model.fireTableDataChanged();
-        while (model.getRowCount() > 0) {
-            model.removeRow(0);
-        }
-        tableMonth.revalidate();
-        jDateChooser1.setDate(null);
-        transTable();
-    }//GEN-LAST:event_bView1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel TransPanel;
     private javax.swing.JPanel accountPanel;
     private javax.swing.JButton bView;
-    private javax.swing.JButton bView1;
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnUpdate;
@@ -813,16 +720,6 @@ public class taskPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tfAddItemQuan;
     private javax.swing.JTextField tfAddItemStock;
     // End of variables declaration//GEN-END:variables
-
-    private void updateItems() {// print all data in itemName in tableAddItem
-        String sql = "select ID,itemName as Item,code as Code,itemQuantity as Quantity,itemPrice as Price,itemStock as Stock  from itemLists";
-        tableUpdates(tableAddItem, sql);
-    }
-
-    private void transTable() {
-        String sql = "Select transID as Transaction_ID,Seller,transPrice as Total,transDate as Date from tableofTrans";
-        tableUpdates(tableMonth, sql);
-    }
 
     public void clear() {//clear fields
         lblAddID.setText("");

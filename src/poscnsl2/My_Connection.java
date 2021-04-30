@@ -22,7 +22,7 @@ public class My_Connection {
         try {
             Class.forName("org.sqlite.JDBC");
             Connection con = DriverManager.getConnection("jdbc:sqlite:db.db");
-             System.err.println("Connection Successful!");			
+           //  System.err.println("Connection Successful!");			
             return con;
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println(e);

@@ -14,13 +14,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import net.proteanit.sql.DbUtils;
-import static poscnsl2.LoginSystem.con;
+import java.sql.Connection;
 
 /**
  *
  * @author Butaw
  */
 public class POSCnsl {
+
+    static Connection con = null;
+    static PreparedStatement pst = null;
+    static ResultSet rs = null;
 
     /**
      * @param args the command line arguments
@@ -43,8 +47,7 @@ public class POSCnsl {
     }
 
     static final boolean checkerExist(String input, String table, String field) {//check username/uName if exist
-        PreparedStatement pst;
-        ResultSet rs;
+        con = My_Connection.dbConnection();
         boolean user_exist = false;
 
         String query = "SELECT * FROM " + table + " WHERE " + field + " = ?";
@@ -61,6 +64,8 @@ public class POSCnsl {
 
             }
             con.endRequest();
+            rs.close();
+            pst.close();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -68,22 +73,20 @@ public class POSCnsl {
     }
 
     static final void tableUpdates(JTable table, String sql) {// print all data in itemName in tableAddItem
+        con = My_Connection.dbConnection();
         try {
             con.beginRequest();
-            PreparedStatement pst;
-            ResultSet rs;
             //   String sql = "select * from itemLists";
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
             table.setModel(DbUtils.resultSetToTableModel(rs));
             rs.close();
+            pst.close();
+            con.close();
             con.endRequest();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
-    
-    public static void main(String[] args) {
 
-    }
 }

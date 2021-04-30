@@ -6,37 +6,41 @@
 package poscnsl2;
 
 import java.awt.Color;
-import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.sql.Connection;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import javax.swing.border.BevelBorder;
 import static poscnsl2.POSCnsl.panelChanger;
 import static poscnsl2.POSCnsl.aesthetic;
-import static poscnsl2.POSCnsl.checkerExist;
+
 /**
  *
  * @author Butaw
  */
 public final class LoginSystem extends javax.swing.JFrame {
 
-    static final Connection con = My_Connection.dbConnection();
+    //   static final Connection con = My_Connection.dbConnection();
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    protected final String mod = "Seller";
+    LoginEvents logEvt;
 
-    protected String mod = "Seller";
+    private static final LoginSystem login = new LoginSystem();
 
     private LoginSystem() {
-
         initComponents();
+        logEvt = LoginEvents.getInstance();
         setResizable(false);
         setLocationRelativeTo(null);
         panelChanger(mainPanel, loginPanel);
-        lblInvalid.hide();
-        lblcapsWarning.hide();
-        Encrypt("admin");
+        // Encrypt("admin");
+
+    }
+
+    public static LoginSystem getInstance() {
+        return login;
     }
 
     public void clear() {
@@ -45,7 +49,7 @@ public final class LoginSystem extends javax.swing.JFrame {
         pfConfirm.setText("");
         pfPass.setText("");
         tfUser.setText("");
-        pfCreatePass.setText("");       
+        pfCreatePass.setText("");
     }
 
     /**
@@ -235,8 +239,7 @@ public final class LoginSystem extends javax.swing.JFrame {
 
         lblInvalid.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         lblInvalid.setForeground(new java.awt.Color(255, 51, 51));
-        lblInvalid.setText("Incorrect! Check Username and Password");
-        loginPanel.add(lblInvalid, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, -1, -1));
+        loginPanel.add(lblInvalid, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 380, 20));
 
         pfPass.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         pfPass.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -261,8 +264,6 @@ public final class LoginSystem extends javax.swing.JFrame {
             }
         });
         loginPanel.add(pfPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 120, 30));
-
-        lblcapsWarning.setText("Caps Lock On ⚠");
         loginPanel.add(lblcapsWarning, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 120, 120, 30));
 
         mainPanel.add(loginPanel, "card2");
@@ -286,8 +287,7 @@ public final class LoginSystem extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCreateActionPerformed
-       /*Create user button */
-        PreparedStatement pst;
+        /*Create user button */
         String confirm = String.valueOf(pfConfirm.getPassword());
         String cPass = String.valueOf(pfCreatePass.getPassword());
         if (tfName.getText().equals("") || tfCreateUser.getText().equals("") || confirm.equals("")// checking textfields if null or ""
@@ -295,64 +295,21 @@ public final class LoginSystem extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Please input");
         } else {
             if (confirm.equals(cPass)) {//password confirm
-                if (!checkerExist(tfCreateUser.getText(), "userLogin", "uName"))// check on db if user exist if not then proceed
-                 
-                    try {
-                        con.beginRequest();
-                    String query = "Insert into userLogin(Name,uPos,uName,uPass)values(?,?,?,?)";
-                    pst = con.prepareStatement(query);
-                    pst.setString(1, tfName.getText());
-                    pst.setString(2, mod);
-                    pst.setString(3, tfCreateUser.getText());
-                    pst.setString(4, Encrypt(cPass));
-                    pst.execute();
-                    JOptionPane.showMessageDialog(null, "Created Successfully!");
-                    clear();
-                    panelChanger(mainPanel, loginPanel);
-                    lblInvalid.hide();
-                    lblCreate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-                    pst.close();
-                    con.endRequest();
-                } catch (HeadlessException | SQLException e) {
-                    JOptionPane.showMessageDialog(null, e);
-                }
-
+                displayCreate();
+                logEvt.createAccount();
+                clear();
+                panelChanger(mainPanel, loginPanel);
             } else {
-                JOptionPane.showMessageDialog(null, "Password not same");
-
+                JOptionPane.showMessageDialog(null, "Not Same Password");
             }
         }
 
     }//GEN-LAST:event_bCreateActionPerformed
 
-   /* private boolean checkuser(String input,String table,String field) {//check username/uName if exist
-        PreparedStatement pst;
-        ResultSet rs;
-        boolean user_exist = false;
-
-         String query = "SELECT * FROM "+table+" WHERE "+field+" = ?";
-
-        try {
-            con.beginRequest();
-            pst = con.prepareStatement(query);
-            pst.setString(1, input);
-            rs = pst.executeQuery();
-
-            if (rs.next()) {
-                user_exist = true;
-                JOptionPane.showMessageDialog(null, "Username Already Exist", "Username Failed", 2);
-
-            }
-            con.endRequest();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
-        return user_exist;
-    }*/
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
         panelChanger(mainPanel, loginPanel);
-        lblInvalid.hide();
         lblCreate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
+        clear();
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void lblCreateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCreateMouseClicked
@@ -371,39 +328,29 @@ public final class LoginSystem extends javax.swing.JFrame {
     }//GEN-LAST:event_lblCreateMouseExited
 
     private void bLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLoginActionPerformed
-       /*login button*/
-        loginAction();
-    }//GEN-LAST:event_bLoginActionPerformed
-
-    private void loginAction(){
-        PreparedStatement pst;
-        String pos, user;
-        String logPass = String.valueOf(pfPass.getPassword());
-        ResultSet rs;
+        /*login button*/
         if (tfUser.getText().equals("") || pfPass.getPassword().equals("")) {
             JOptionPane.showMessageDialog(null, "Please input"); // checking fields if it's null or not
         } else {
-            try {
-                con.beginRequest();
-                String userLowletter = tfUser.getText().toLowerCase();
-                String query = "Select * from userLogin where uName=? and uPass=?";
-                pst = con.prepareStatement(query);
-                pst.setString(1, userLowletter);
-                pst.setString(2,    Encrypt(logPass));
-                rs = pst.executeQuery();
-                pos = rs.getString("ID");
-                user = rs.getString("Name");
-                checkPos(pos);
-               // Decrypt(logPass);
-                pst.close();
-                con.endRequest();
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "Wrong User and Pass");
-          //      JOptionPane.showMessageDialog(null, e);
-                lblInvalid.show();
-            }
+            displayLogin();
+            logEvt.loginAction();
+            lblInvalid.setText(logEvt.getWarnMessage());
+            checkerWin();
         }
+    }//GEN-LAST:event_bLoginActionPerformed
+    private void displayLogin() {
+        logEvt.setUserName(tfUser.getText().toLowerCase());
+        logEvt.setPassword(Encrypt(String.valueOf(pfPass.getPassword())));
+        lblInvalid.setText(logEvt.getWarnMessage());
     }
+
+    private void displayCreate() {
+        logEvt.setName(tfName.getText());
+        logEvt.setUserName(tfCreateUser.getText());
+        logEvt.setConfirmPassword(pfConfirm.getText());
+        logEvt.setPassword(Encrypt(String.valueOf(pfCreatePass.getPassword())));
+    }
+
     private void pfPassKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pfPassKeyReleased
         // TODO add your handling code here:
         capsLock();
@@ -411,7 +358,7 @@ public final class LoginSystem extends javax.swing.JFrame {
 
     private void pfPassFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pfPassFocusLost
         // TODO add your handling code here:
-        lblcapsWarning.hide();
+        lblcapsWarning.setText("");
     }//GEN-LAST:event_pfPassFocusLost
 
     private void pfPassFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pfPassFocusGained
@@ -435,81 +382,57 @@ public final class LoginSystem extends javax.swing.JFrame {
         // TODO add your handling code here:
         enterButton(evt);
     }//GEN-LAST:event_tfUserKeyPressed
-    private void enterButton(KeyEvent evt){
-         // boolean isOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_ENTER);
-        if (evt.getKeyCode()==KeyEvent.VK_ENTER) {
-            loginAction();
+    private void enterButton(KeyEvent evt) {
+        // boolean isOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_ENTER);
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            displayLogin();
+            logEvt.loginAction();
+            checkerWin();
+            lblInvalid.setText(logEvt.getWarnMessage());
         }
     }
+
+    public void clearLogin() {
+        tfUser.setText("");
+        pfPass.setText("");
+    }
+
+    private void checkerWin() {
+        mainFrame frame = mainFrame.getInstance();
+        if (frame.isShowing()) {
+            dispose();
+        }
+    }
+
     private void capsLock() {
         boolean isOn = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
         if (isOn == true) {
-            lblcapsWarning.show();
+            lblcapsWarning.setText("Caps Lock On ⚠");
         } else {
-            lblcapsWarning.hide();
+            lblcapsWarning.setText("");
         }
     }
 
-    private boolean checkPos(String input) {//checking posistion admin or seller
-        PreparedStatement pst;
-        ResultSet rs;
-        String pos, uID;
-        mainFrame form = mainFrame.getInstance();
-        boolean user_exist = false;
-
-        try {
-            con.beginRequest();
-            String query = "SELECT * FROM `userLogin` WHERE `ID` = ?";
-            pst = con.prepareStatement(query);
-            pst.setString(1, input);
-            rs = pst.executeQuery();
-            if (rs.next()) {
-                user_exist = true;
-                uID = rs.getString("ID");
-                form.user(rs.getString("Name"));
-                pos = rs.getString("uPos");
-                if (input.equals(uID)) {
-                    if (pos.equals("Seller")) {//checking if seller
-                       System.out.println("WOOOOOOW you're an seller");
-                      form.seller();
-                    } else {//if not
-                      System.out.println("WOOOOOOW you're an admin");
-                    }
-                }
-                JOptionPane.showMessageDialog(null, "Activated!");
-                form.setVisible(true);
-                form.pack();
-                form.setLocationRelativeTo(null);
-                dispose();
-                rs.close();
-                //JOptionPane.showMessageDialog(null,"Invalid email and pass","Login Error",2 );
-            }
-            lblInvalid.show();
-            con.endRequest();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
+    private String Encrypt(String value) {
+        char[] chars = value.toCharArray();
+        for (char c : chars) {
+            c -= 10;
+            value = String.valueOf(c);
+            // System.out.print(value);
         }
-        return user_exist;
+        return value;
     }
-  private String Encrypt(String value){
-       char[] chars = value.toCharArray();
-       for(char c : chars){
-           c -=10;
-           value = String.valueOf(c);
-         // System.out.print(value);
-       }
-       return value;
-  }
-    private String Decrypt(String value){
-       char[] chars = value.toCharArray();
-       for(char c : chars){
-           c +=10;
-           value = String.valueOf(c);
-       //    System.out.print(value);
-       }
-       return value;
-  }
-  
+
+    private String Decrypt(String value) {
+        char[] chars = value.toCharArray();
+        for (char c : chars) {
+            c += 10;
+            value = String.valueOf(c);
+            //    System.out.print(value);
+        }
+        return value;
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -530,7 +453,8 @@ public final class LoginSystem extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(LoginSystem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+        //</editor-fold>
+
         //</editor-fold>
 
         /* Create and display the form */
