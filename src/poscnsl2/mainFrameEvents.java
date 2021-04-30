@@ -21,6 +21,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import net.proteanit.sql.DbUtils;
 import static poscnsl2.POSCnsl.tableUpdates;
 
 /**
@@ -43,6 +44,7 @@ public class mainFrameEvents {
     private mainFrameEvents() {
 
         map = new HashMap<>();
+
     }
     private String itemName, transactionID, timeToday, dateToday, cashierName, time, cID;
     private int itemQuantity, currentStock, totalStock, totalQuantity;
@@ -94,7 +96,7 @@ public class mainFrameEvents {
         String moneys = JOptionPane.showInputDialog("Input Money");
         if (moneys == null || (" ".equals(moneys))) {
             JOptionPane.showMessageDialog(null, "empty Fields");
-        } else { 
+        } else {
             setMoney(Float.parseFloat(moneys));
             if (getMoney() < getDisplayAllTotal() || moneys.equals("0")) {
                 JOptionPane.showMessageDialog(null, "Please Try again", "Invalid", 2);
@@ -302,7 +304,7 @@ public class mainFrameEvents {
         }
         setDisplayAllTotal(tot);
         setTotalQuantity(total);
-           System.out.println(total + " new Total Item from Getsum()");
+        System.out.println(total + " new Total Item from Getsum()");
         return tot;
     }
 
@@ -330,10 +332,10 @@ public class mainFrameEvents {
             //a = Integer.parseInt(lblTotStock.getText());
             //   b = Integer.parseInt(tfQuantity.getText());
             if (getCurrentStock() < getItemQuantity()) {
-                JOptionPane.showMessageDialog(null, "no negative number bois", "Invalid Input", 2);
-                setItemQuantity(0);
-                c = 0;
-                setCurrentStock(getCurrentStock());
+              //  JOptionPane.showMessageDialog(null, "no negative number bois", "Invalid Input", 2);
+                setItemQuantity(getCurrentStock());
+                c = getCurrentStock() - getItemQuantity();
+                setCurrentStock(c);
 
                 return (int) c;
             }
@@ -406,8 +408,8 @@ public class mainFrameEvents {
             for (int j = 0; j < tableSoldItems.getColumnCount(); j++) {
                 if (tableSoldItems.getModel().getValueAt(i, j).equals(getItemName())) {
                     setCurrentStock(Integer.parseInt(tb1.getValueAt(i, 2) + ""));
-                    if (getCurrentStock() < 0) {// if stock is equal to 0
-                        JOptionPane.showMessageDialog(null, getItemName() + " Out Of Stock, Sorry");
+                    if (getCurrentStock() <= 0) {// if stock is equal to 0
+                        JOptionPane.showMessageDialog(null, getItemName() + " is Out Of Stock, Sorry");
                         badd.setEnabled(false);
                         id.setText("");
                         code.setText("");
