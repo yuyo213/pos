@@ -11,7 +11,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
 import static poscnsl2.POSCnsl.panelChanger;
 import static poscnsl2.POSCnsl.aesthetic;
-import java.sql.Connection;
 import static poscnsl2.mainFrame.MainPanel;
 import static poscnsl2.mainFrame.PanelFrame;
 
@@ -20,8 +19,6 @@ import static poscnsl2.mainFrame.PanelFrame;
  * @author Butaw
  */
 public class taskPanel extends javax.swing.JPanel {
-
-    Connection con;
     /**
      * Creates new form optionPanel
      */
@@ -526,6 +523,8 @@ public class taskPanel extends javax.swing.JPanel {
 
         panelChanger(PanelFrame, MainPanel);
         aesthetic(lblBack, BevelBorder.RAISED, Color.black);
+        clear();
+        panelChanger(panelTables, TransPanel);
     }//GEN-LAST:event_lblBackMouseClicked
 
     private void lblBackMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBackMouseEntered
@@ -638,6 +637,7 @@ public class taskPanel extends javax.swing.JPanel {
     private void lblTransactionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTransactionsMouseClicked
         // TODO add your handling code here:
         panelChanger(panelTables, TransPanel);
+        clear();
     }//GEN-LAST:event_lblTransactionsMouseClicked
 
     private void lblTransactionsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTransactionsMouseEntered
@@ -653,6 +653,7 @@ public class taskPanel extends javax.swing.JPanel {
     private void lblaccManagerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblaccManagerMouseClicked
         // TODO add your handling code here:
         panelChanger(panelTables, accountPanel);
+        clear();
 
     }//GEN-LAST:event_lblaccManagerMouseClicked
 

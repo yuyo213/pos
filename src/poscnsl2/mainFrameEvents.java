@@ -21,7 +21,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import net.proteanit.sql.DbUtils;
 import static poscnsl2.POSCnsl.tableUpdates;
 
 /**
@@ -91,7 +90,7 @@ public class mainFrameEvents {
 
     /*-----------Cash Out-----------*/
     public void cashOut(JTextArea jTextArea1, JTable tableSoldItems, JTable tableStock) {
-        con = My_Connection.dbConnection();
+        con = Main_Connection.getConnection();
         DefaultTableModel dtm = (DefaultTableModel) tableSoldItems.getModel();
         String moneys = JOptionPane.showInputDialog("Input Money");
         if (moneys == null || (" ".equals(moneys))) {
@@ -107,13 +106,12 @@ public class mainFrameEvents {
                 printhead(jTextArea1);
                 try {
                     for (int i = 0; i < tableSoldItems.getRowCount(); i++) {
-                        String tableQuery = "Insert into transLists(transactionID,tName,tPrice,tQuant,date)values(?,?,?,?,?)";
+                        String tableQuery = "Insert into translists(transactionID,tName,tPrice,tQuant)values(?,?,?,?)";
                         pst = con.prepareStatement(tableQuery);
                         pst.setString(1, getTransactionID());
                         pst.setString(2, dtm.getValueAt(i, 0).toString());
                         pst.setString(3, dtm.getValueAt(i, 1).toString());
                         pst.setString(4, dtm.getValueAt(i, 2).toString());
-                        pst.setString(5, getDateToday());
                         pst.execute();
                     }
                     pst.close();
@@ -125,8 +123,7 @@ public class mainFrameEvents {
                     }
                 }
                 try {
-                    con.beginRequest();
-                    String recieptSearch = " select i.itemPrice as initPrice,t.tQuant,t.tName,t.tPrice from itemLists as i,transLists as t"
+                    String recieptSearch = " select i.itemPrice as initPrice,t.tQuant,t.tName,t.tPrice from itemlists as i,translists as t"
                             + " where t.transactionID = ? and t.tName = i.itemName";
                     pst = con.prepareStatement(recieptSearch);
                     pst.setString(1, getTransactionID());
@@ -155,7 +152,7 @@ public class mainFrameEvents {
                     }
                 }
                 try {
-                    String tableOfTrans = "Insert into tableofTrans(transID,Seller,transPrice,TransMoney,transDate)values(?,?,?,?,?)";
+                    String tableOfTrans = "Insert into tableoftrans(transID,Seller,transPrice,TransMoney,transDate)values(?,?,?,?,?)";
                     pst = con.prepareStatement(tableOfTrans);
                     pst.setString(1, getTransactionID());
                     pst.setString(2, getCashierName());
@@ -182,8 +179,7 @@ public class mainFrameEvents {
     private void stockUpdate(JTable tableStock) {// updating stock when new transaction action event happen
         int row = tableStock.getRowCount();
         try {
-            con.beginRequest();
-            String query = "Update itemLists set itemStock=? where ID=?";
+            String query = "Update itemlists set itemStock=? where ID=?";
             pst = con.prepareStatement(query);
             for (int i = 0; i < row; i++) {
                 int stock = (int) tableStock.getValueAt(i, 2);
@@ -194,14 +190,13 @@ public class mainFrameEvents {
             }
             pst.close();
             updateTableStock(tableStock);
-            con.endRequest();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
 
     private void updateTableStock(JTable table) {// get the database columns and its rows
-        String sql = "select ID,itemName as [Item Name],itemStock as [Item Stock] from itemLists";
+        String sql = "select ID,`itemName` as `Item Name`,`itemStock` as `Item Stock` from itemlists";
         tableUpdates(table, sql);
     }
 
@@ -240,42 +235,34 @@ public class mainFrameEvents {
     /*-----------Manipulate item to tableStock-----------*/
     private void operators(char operator, int bItem, JTable tableStock) {//checking stock in the itemviewer if stock not enough 
         DefaultTableModel tb1 = (DefaultTableModel) tableStock.getModel();
-        for (int i = 0; i < tableStock.getRowCount(); i++) {//nested loop (brute force)
+        for (int i = 0; i < tb1.getRowCount(); i++) {//nested loop (brute force)
             if (tb1.getValueAt(i, 1).equals(getItemName())) {//check if tablestock == to iName
-                System.out.println(tableStock.getValueAt(i, 1));
-                int tStock = (int) tableStock.getValueAt(i, 2);
+                int tStock = (int) tb1.getValueAt(i, 2);
                 switch (operator) {
                     case '+'://for delete button to add up the deleted item stock
                         int result = tStock + bItem;
                         System.out.println(result);
                         // setTotal((int) jTable1.getValueAt(i, 2) - result);
-                        tableStock.setValueAt(result, i, 2);
+                        tb1.setValueAt(result, i, 2);
                         break;
                     case '-': //for add button to minus item stock
                         result = tStock - bItem;
                         System.out.println(result);
                         // setTotal((int) jTable1.getValueAt(i, 2) - result);
-                        tableStock.setValueAt(result, i, 2);
+                        tb1.setValueAt(result, i, 2);
                         break;
                     default:
                         JOptionPane.showMessageDialog(null, "Error");
                 }
-
-                int tb2 = (int) tb1.getValueAt(i, 2);
-                if (tb2 < 0) {
-                    JOptionPane.showMessageDialog(null, "Not enough item");//print this 
-                }
-
             }
         }
     }
 
     /*-----------Time Card -  Out -----------*/
     public void timeOut() {
-        con = My_Connection.dbConnection();
+        con = Main_Connection.getConnection();
         try {
-            con.beginRequest();
-            String query = "Update timeCard set tOut=? where tOut='Currently Online'";
+            String query = "Update timecard set tOut=? where tOut='Currently Online'";
             pst = con.prepareStatement(query);
             pst.setString(1, getTime());
             // pst.setString(2, getcID());
@@ -283,7 +270,6 @@ public class mainFrameEvents {
             pst.close();
             rs.close();
             con.close();
-            con.endRequest();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error Occur");
             try {
@@ -332,7 +318,7 @@ public class mainFrameEvents {
             //a = Integer.parseInt(lblTotStock.getText());
             //   b = Integer.parseInt(tfQuantity.getText());
             if (getCurrentStock() < getItemQuantity()) {
-              //  JOptionPane.showMessageDialog(null, "no negative number bois", "Invalid Input", 2);
+                //  JOptionPane.showMessageDialog(null, "no negative number bois", "Invalid Input", 2);
                 setItemQuantity(getCurrentStock());
                 c = getCurrentStock() - getItemQuantity();
                 setCurrentStock(c);
@@ -359,12 +345,11 @@ public class mainFrameEvents {
 
     /*-----------Search item using id or barcode -----------*/
     public void idCode(String value, String sText, JTable tableSoldItems, JTable tableStock, JButton badd, JTextField id, JTextField code) {
-        con = My_Connection.dbConnection();
+        con = Main_Connection.getConnection();
         //searching id or code in the database if exist fill the fields with its contents
         int flg = 0;
         try {
-            con.beginRequest();
-            String query = "Select * from itemLists where " + value + "=?";
+            String query = "Select itemName,itemPrice,itemQuantity,itemStock from itemlists where " + value + "=?";
             pst = con.prepareStatement(query);
             pst.setString(1, sText);
             rs = pst.executeQuery();
@@ -384,7 +369,6 @@ public class mainFrameEvents {
             rs.close();
             pst.close();
             con.close();
-            con.endRequest();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -405,18 +389,16 @@ public class mainFrameEvents {
     private void jtabs(JTable tableSoldItems, JButton badd, JTextField id, JTextField code) {// check tablestock stock 
         DefaultTableModel tb1 = (DefaultTableModel) tableSoldItems.getModel();
         for (int i = 0; i < tableSoldItems.getRowCount(); i++) {
-            for (int j = 0; j < tableSoldItems.getColumnCount(); j++) {
-                if (tableSoldItems.getModel().getValueAt(i, j).equals(getItemName())) {
-                    setCurrentStock(Integer.parseInt(tb1.getValueAt(i, 2) + ""));
-                    if (getCurrentStock() <= 0) {// if stock is equal to 0
-                        JOptionPane.showMessageDialog(null, getItemName() + " is Out Of Stock, Sorry");
-                        badd.setEnabled(false);
-                        id.setText("");
-                        code.setText("");
-                        clear();
-                    } else {
-                        badd.setEnabled(true);
-                    }
+            if (tableSoldItems.getModel().getValueAt(i, 0).equals(getItemName())) {
+                setCurrentStock(Integer.parseInt(tb1.getValueAt(i, 2) + ""));
+                if (getCurrentStock() <= 0) {// if stock is equal to 0
+                    JOptionPane.showMessageDialog(null, getItemName() + " is Out Of Stock, Sorry");
+                    badd.setEnabled(false);
+                    id.setText("");
+                    code.setText("");
+                    clear();
+                } else {
+                    badd.setEnabled(true);
                 }
             }
         }
@@ -428,12 +410,19 @@ public class mainFrameEvents {
         try {
             // jTextArea1.print();
 
-            PrintWriter out = new PrintWriter("test\\" + getTransactionID() + ".txt");
+            PrintWriter out = new PrintWriter("transactions\\" + getTransactionID());
             out.print(jTextArea1.getText());
             out.close();
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, e);
         }
+        updateTableStock(tableStock);
+        clear();
+        transIDs();
+        id();
+    }
+
+    public void startTran(JTable tableStock) {
         updateTableStock(tableStock);
         clear();
         transIDs();
@@ -457,9 +446,9 @@ public class mainFrameEvents {
     }
 
     private void id() {
-        con = My_Connection.dbConnection();
+        con = Main_Connection.getConnection();
         try {
-            String query = "Select * from transLists where transactionID = ?";
+            String query = "Select transactionID from translists where transactionID = ?";
             pst = con.prepareStatement(query);
             pst.setString(1, getTransactionID());
             rs = pst.executeQuery();
@@ -497,12 +486,12 @@ public class mainFrameEvents {
     }
 
     public void tableClick(JTable tableSoldItems) {
-        con = My_Connection.dbConnection();
+        con = Main_Connection.getConnection();
         DefaultTableModel dtm = (DefaultTableModel) tableSoldItems.getModel();
         int selectedRowIndex = tableSoldItems.getSelectedRow();
 
         try {
-            String query = "SELECT * FROM `itemLists` WHERE `itemName` = ?";
+            String query = "SELECT itemName,itemStock,itemQuantity,itemPrice FROM `itemlists` WHERE `itemName` = ?";
             pst = con.prepareStatement(query);
             pst.setString(1, (String) dtm.getValueAt(selectedRowIndex, 0));
             rs = pst.executeQuery();

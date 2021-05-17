@@ -17,16 +17,13 @@ import javax.swing.border.BevelBorder;
 import static poscnsl2.POSCnsl.panelChanger;
 import static poscnsl2.POSCnsl.aesthetic;
 import static poscnsl2.POSCnsl.tableUpdates;
-import java.sql.Connection;
-import java.util.HashMap;
 
 /**
  *
  * @author Butaw
  */
 public final class mainFrame extends javax.swing.JFrame {
-    
-    Connection con = null;
+
     private static final mainFrame main = new mainFrame();
     Date d;
     SimpleDateFormat dbD;
@@ -34,9 +31,9 @@ public final class mainFrame extends javax.swing.JFrame {
     mainFrameEvents mEvent;
     private String itemQuantity, itemName, totalQuantity, itemPrice;
     taskPanelEvents tEvt;
-    
+
     private mainFrame() {
-        
+
         initComponents();
         d = new Date();
         dbD = new SimpleDateFormat("MM-dd-yyyy");
@@ -51,20 +48,25 @@ public final class mainFrame extends javax.swing.JFrame {
         bNewTransaction.setEnabled(false);
         mEvent = mainFrameEvents.getInstance();
         tEvt = taskPanelEvents.getInstance();
-        mEvent.newTransaction(jTextArea1, tableSoldItems, tableStock);
+        mEvent.startTran(tableStock);
         lblTransaction.setText(mEvent.getTransactionID());
+        sellerChecker();
     }
     
     public static mainFrame getInstance() {
         return main;
     }
-    
+
     public void ButtonSwitch() {
         baddItem.setEnabled(false);
         bDelete.setEnabled(false);
         bcashOut.setEnabled(false);
     }
-
+    private void sellerChecker(){
+        if(lblSeller.getText().equals("")){
+            lblSeller.setText("Developer");
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -74,6 +76,7 @@ public final class mainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel2 = new javax.swing.JPanel();
         PanelFrame = new javax.swing.JPanel();
         MainPanel = new javax.swing.JPanel();
         tablePanel = new javax.swing.JPanel();
@@ -125,12 +128,35 @@ public final class mainFrame extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                formMouseDragged(evt);
+            }
+        });
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
         });
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 770, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(jPanel2, java.awt.BorderLayout.PAGE_START);
 
         PanelFrame.setLayout(new java.awt.CardLayout());
 
@@ -169,7 +195,7 @@ public final class mainFrame extends javax.swing.JFrame {
         tablePanel.setLayout(tablePanelLayout);
         tablePanelLayout.setHorizontalGroup(
             tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
         );
         tablePanelLayout.setVerticalGroup(
             tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -489,7 +515,7 @@ public final class mainFrame extends javax.swing.JFrame {
             .addGroup(MainPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pricePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
+                    .addComponent(pricePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(MainPanelLayout.createSequentialGroup()
                         .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -504,7 +530,7 @@ public final class mainFrame extends javax.swing.JFrame {
             MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pricePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                .addComponent(pricePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(MainPanelLayout.createSequentialGroup()
@@ -545,7 +571,7 @@ public final class mainFrame extends javax.swing.JFrame {
         tablePanel1.setLayout(tablePanel1Layout);
         tablePanel1Layout.setHorizontalGroup(
             tablePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
         );
         tablePanel1Layout.setVerticalGroup(
             tablePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -587,12 +613,12 @@ public final class mainFrame extends javax.swing.JFrame {
                     .addComponent(ItemBack))
                 .addGap(30, 30, 30)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addContainerGap(129, Short.MAX_VALUE))
         );
 
         PanelFrame.add(itemViewer, "card4");
 
-        getContentPane().add(PanelFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        getContentPane().add(PanelFrame, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -621,7 +647,7 @@ public final class mainFrame extends javax.swing.JFrame {
             bNewTransaction.setEnabled(false);
             lblTransaction.setText(mEvent.getTransactionID());
             jTextArea1.setText("");
-            
+
         }
     }//GEN-LAST:event_bNewTransactionActionPerformed
     private void bOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bOptionActionPerformed
@@ -653,7 +679,7 @@ public final class mainFrame extends javax.swing.JFrame {
             lblCurStock.setText("");
             clear();
         }
-        
+
 
     }//GEN-LAST:event_bcashOutActionPerformed
 
@@ -670,7 +696,7 @@ public final class mainFrame extends javax.swing.JFrame {
         setItemQuantity(String.valueOf(mEvent.getItemQuantity()));
         setItemPrice(String.valueOf(mEvent.getItemPrice()));
     }//GEN-LAST:event_tableSoldItemsMouseClicked
-
+ 
     private void tfItemCodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfItemCodeKeyReleased
         // relase key pressed / type item code (real)
         numberonly(evt);
@@ -706,7 +732,7 @@ public final class mainFrame extends javax.swing.JFrame {
     private void tfQuantityKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfQuantityKeyTyped
         numberonly(evt);
     }//GEN-LAST:event_tfQuantityKeyTyped
-    
+
 
     private void baddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baddItemActionPerformed
         //adding the item
@@ -724,7 +750,6 @@ public final class mainFrame extends javax.swing.JFrame {
             tfID.setText("");
         }
     }//GEN-LAST:event_baddItemActionPerformed
-    
 
     private void bDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDeleteActionPerformed
         // TODO add your handling code here:
@@ -747,7 +772,7 @@ public final class mainFrame extends javax.swing.JFrame {
             tableSoldItems.clearSelection();
             //getSum();
         } catch (NullPointerException e) {
-            
+
         }
 
     }//GEN-LAST:event_bDeleteActionPerformed
@@ -763,12 +788,12 @@ public final class mainFrame extends javax.swing.JFrame {
         }
         mEvent.setItemQuantity(Integer.parseInt(tfQuantity.getText()));
         mEvent.setTotalQuantity(Integer.parseInt(lblTotStock.getText()));
-        
+
         mEvent.autoSum2();
         String currentStock = String.valueOf(mEvent.getCurrentStock());
         lblCurStock.setText(currentStock);
         mEvent.setItemName(lblName.getText());
-        
+
 
     }//GEN-LAST:event_tfQuantityKeyReleased
 
@@ -793,6 +818,17 @@ public final class mainFrame extends javax.swing.JFrame {
     private void lblLogOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogOutMouseClicked
         closeWin();
     }//GEN-LAST:event_lblLogOutMouseClicked
+    int posX=0,posY=0;
+    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
+        // TODO add your handling code here:
+            posX=evt.getX();
+            posY=evt.getY();
+    }//GEN-LAST:event_formMousePressed
+
+    private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
+        // TODO add your handling code here:
+        setLocation (evt.getXOnScreen()-posX,evt.getYOnScreen()-posY);
+    }//GEN-LAST:event_formMouseDragged
     private void closeWin() {//window closing dialog 
         if (tableSoldItems.getRowCount() != 0) {
             int input = JOptionPane.showOptionDialog(null, "Do you want to exit? Current Transaction will gone", "Exit",
@@ -821,18 +857,18 @@ public final class mainFrame extends javax.swing.JFrame {
             dispose();
         }
     }
-    
+
     private void numberonly(KeyEvent evt) {
         if (!Character.isDigit(evt.getKeyChar())) {
             evt.consume();
         }
     }
-    
+
     private void updateTableStock(JTable table) {// get the database columns and its rows
-        String sql = "select ID,itemName as [Item Name],itemStock as [Item Stock] from itemLists";
+        String sql = "select ID,`itemName` as `Item Name`,`itemStock` as `Item Stock` from itemlists";
         tableUpdates(table, sql);
     }
-    
+
     private void clear() {//clear fields
         //Thread.sleep(150);
         lblName.setText("");
@@ -841,10 +877,10 @@ public final class mainFrame extends javax.swing.JFrame {
         lblTotStock.setText("");
         lblCurStock.setText("");
     }
-    
+
     private void time() {
         Thread t = new Thread() {
-            
+
             @Override
             public void run() {
                 while (true) {
@@ -854,18 +890,18 @@ public final class mainFrame extends javax.swing.JFrame {
                     try {
                         Thread.sleep(1);
                     } catch (InterruptedException e) {
-                        
+
                     }
                 }
             }
         };
         t.start();
     }
-    
+
     public void user(String name) {
         lblSeller.setText(name);
     }
-    
+
     public void seller() {
         bOption.setEnabled(false);
     }
@@ -925,6 +961,7 @@ public final class mainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
@@ -1007,5 +1044,5 @@ public final class mainFrame extends javax.swing.JFrame {
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }
-    
+
 }

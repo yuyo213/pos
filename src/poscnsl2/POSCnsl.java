@@ -47,13 +47,12 @@ public class POSCnsl {
     }
 
     static final boolean checkerExist(String input, String table, String field) {//check username/uName if exist
-        con = My_Connection.dbConnection();
+        con = Main_Connection.getConnection();
         boolean user_exist = false;
 
-        String query = "SELECT * FROM " + table + " WHERE " + field + " = ?";
+        String query = "SELECT uName FROM " + table + " WHERE " + field + " = ?";
 
         try {
-            con.beginRequest();
             pst = con.prepareStatement(query);
             pst.setString(1, input);
             rs = pst.executeQuery();
@@ -63,7 +62,6 @@ public class POSCnsl {
                 JOptionPane.showMessageDialog(null, "Already Exist", "Failed", 2);
 
             }
-            con.endRequest();
             rs.close();
             pst.close();
         } catch (SQLException ex) {
@@ -73,9 +71,8 @@ public class POSCnsl {
     }
 
     static final void tableUpdates(JTable table, String sql) {// print all data in itemName in tableAddItem
-        con = My_Connection.dbConnection();
+       con = Main_Connection.getConnection();
         try {
-            con.beginRequest();
             //   String sql = "select * from itemLists";
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
@@ -83,7 +80,6 @@ public class POSCnsl {
             rs.close();
             pst.close();
             con.close();
-            con.endRequest();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }

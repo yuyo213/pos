@@ -20,8 +20,6 @@ import static poscnsl2.POSCnsl.aesthetic;
  * @author Butaw
  */
 public final class LoginSystem extends javax.swing.JFrame {
-
-    //   static final Connection con = My_Connection.dbConnection();
     PreparedStatement pst = null;
     ResultSet rs = null;
     protected final String mod = "Seller";
@@ -206,8 +204,7 @@ public final class LoginSystem extends javax.swing.JFrame {
 
         lblCreate.setBackground(new java.awt.Color(255, 255, 255));
         lblCreate.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        lblCreate.setForeground(new java.awt.Color(51, 51, 255));
-        lblCreate.setText("Create an Account(Seller)");
+        lblCreate.setText("Create an Account(Seller)\n");
         lblCreate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblCreateMouseClicked(evt);
@@ -308,7 +305,7 @@ public final class LoginSystem extends javax.swing.JFrame {
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
         panelChanger(mainPanel, loginPanel);
-        lblCreate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
+        lblCreate.setText("Create an Account(Seller)");
         clear();
     }//GEN-LAST:event_jLabel7MouseClicked
 
@@ -320,11 +317,15 @@ public final class LoginSystem extends javax.swing.JFrame {
     }//GEN-LAST:event_lblCreateMouseClicked
 
     private void lblCreateMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCreateMouseEntered
-        lblCreate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        lblCreate.setText("<html>\n"
+                + "<body>\n"
+                + "<a href=\"\">Create an Account(Seller)</a>\n"
+                + "</body>\n"
+                + "</html>");
     }//GEN-LAST:event_lblCreateMouseEntered
 
     private void lblCreateMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCreateMouseExited
-        lblCreate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
+        lblCreate.setText("Create an Account(Seller)");
     }//GEN-LAST:event_lblCreateMouseExited
 
     private void bLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLoginActionPerformed

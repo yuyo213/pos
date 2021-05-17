@@ -44,11 +44,10 @@ public class taskPanelEvents {
     }
 
     public void addButton(JTable tableAddItem) {
-        con = My_Connection.dbConnection();
-        if (!checkerExist(getItemName(), "itemLists", "itemName")) { // check item if its already exist
+        con = Main_Connection.getConnection();
+        if (!checkerExist(getItemName(), "itemlists", "itemName")) { // check item if its already exist
             try {
-                con.beginRequest();
-                String query1 = "insert into itemLists(code,itemName,itemQuantity,itemPrice,itemStock)values('" + getItemCode()
+                String query1 = "insert into itemlists(code,itemName,itemQuantity,itemPrice,itemStock)values('" + getItemCode()
                         + "','" + getItemName() + "','" + getItemQuantity()
                         + "','" + getItemPrice() + "','" + getItemStock() + "')";
                 pst = con.prepareStatement(query1);
@@ -62,7 +61,6 @@ public class taskPanelEvents {
 
                 }
                 pst.close();
-                con.endRequest();
                 con.close();
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, e);
@@ -75,10 +73,9 @@ public class taskPanelEvents {
     }
 
     public void updateButton(JTable tableAddItem) {
-        con = My_Connection.dbConnection();
+     con = Main_Connection.getConnection();
         try {
-            con.beginRequest();
-            String query = "Update itemLists set itemPrice=?,itemName=?,itemQuantity=?,itemStock=?,code=? where ID=?";
+            String query = "Update itemlists set itemPrice=?,itemName=?,itemQuantity=?,itemStock=?,code=? where ID=?";
             pst = con.prepareStatement(query);
             pst.setString(6, getItemID());
             pst.setFloat(1, getItemPrice());
@@ -97,7 +94,6 @@ public class taskPanelEvents {
 
                 }*/
             pst.close();
-            con.endRequest();
             con.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
@@ -109,17 +105,15 @@ public class taskPanelEvents {
     }
 
     public void deleteButton(JTable tableAddItem) {
-        con = My_Connection.dbConnection();
+    con = Main_Connection.getConnection();
         try {
-            con.beginRequest();
-            String query = "DELETE FROM `itemLists` WHERE `code` ='" + getItemCode() + "'";
+            String query = "DELETE FROM `itemlists` WHERE `code` ='" + getItemCode() + "'";
             pst = con.prepareStatement(query);
             JOptionPane.showMessageDialog(null, "Item Deleted");
             pst.executeUpdate();
             updateItems(tableAddItem);
             // clear();
             pst.close();
-            con.endRequest();
             con.close();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
@@ -131,15 +125,15 @@ public class taskPanelEvents {
     }
 
     public void viewTable(JTable tableMonth, JDateChooser jDateChooser1) {
-       
+
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
         if (jDateChooser1.getDate() == null) {
-           // transTable(tableMonth);
+            // transTable(tableMonth);
             DefaultTableModel table = (DefaultTableModel) tableMonth.getModel();  //table sorter
             TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(table);
             tableMonth.setRowSorter(tr);
         } else {
-           // transTable(tableMonth);
+            // transTable(tableMonth);
             DefaultTableModel table = (DefaultTableModel) tableMonth.getModel();  //table sorter
             TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(table);
             tableMonth.setRowSorter(tr);
@@ -148,13 +142,13 @@ public class taskPanelEvents {
     }
 
     public void updateItems(JTable tableAddItem) {// print all data in itemName in tableAddItem
-        String sql = "select ID,itemName as Item,code as Code,itemQuantity as Quantity,itemPrice as Price,itemStock as Stock  from itemLists";
+        String sql = "select ID,itemName as Item,code as Code,itemQuantity as Quantity,itemPrice as Price,itemStock as Stock  from itemlists";
         tableUpdates(tableAddItem, sql);
     }
 
     public void transTable(JTable tableMonth) {
 
-        String sql = "Select transID as [Transaction ID],Seller as [Cashier Name],transPrice as Total,transDate as Date from tableofTrans";
+        String sql = "Select `transID` as `Transaction ID`,`Seller` as `Cashier Name`,transPrice as Total,transDate as Date from tableoftrans";
         tableUpdates(tableMonth, sql);
     }
 

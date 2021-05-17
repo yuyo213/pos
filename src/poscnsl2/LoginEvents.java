@@ -25,8 +25,8 @@ public class LoginEvents {
     Connection con = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
-    private String Name, userName, Password, ConfirmPassword, warnMessage, cashier, userPos, cID;
-    private String pos = "Seller";
+    private String Name, userName, Password, ConfirmPassword, warnMessage, cashier, userPos;
+    private final String pos = "Seller";
 
     private LoginEvents() {
 
@@ -43,23 +43,18 @@ public class LoginEvents {
         SimpleDateFormat dbD = new SimpleDateFormat("MM-dd-yyyy");
         String curTime = time.format(d = new Date());
         String todate = dbD.format(d = new Date());
-
-        //con = My_Connection.dbConnection();
         String currentlyOnline = "Currently Online";
 
         try {
-            con.beginRequest();
-            String query = "Insert into timeCard(Name,Position,tIn,tOut,date)values(?,?,?,?,?)";
+            String query = "Insert into timecard(Name,tIn,tOut,date)values(?,?,?,?)";
             pst = con.prepareStatement(query);
             pst.setString(1, getCashier());
-            pst.setString(2, getUserPos());
-            pst.setString(3, curTime);
-            pst.setString(4, currentlyOnline);
-            pst.setString(5, todate);
+            pst.setString(2, curTime);
+            pst.setString(3, currentlyOnline);
+            pst.setString(4, todate);
             pst.execute();
             pst.close();
             //  con.close();
-            con.endRequest();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error Occur");
             JOptionPane.showMessageDialog(null, e);
@@ -71,29 +66,14 @@ public class LoginEvents {
 
     }
 
-    /*private void userID() throws SQLException {
-        mainFrameEvents events = mainFrameEvents.getInstance();
-        con.beginRequest();
-        String id = "Select ID from timeCard where tOut ='Currently Online'";
-        pst = con.prepareStatement(id);
-        pst.executeQuery();
-        if (rs.next()) {
-           events.setcID(rs.getString("ID"));
-        }
-        events.setcID(cID);
-        System.out.println(events.getcID());
-        con.endRequest();
-        pst.close();
-        rs.close();
-    }*/
 
  /*------------Create Account-----------*/
     public void createAccount() {
-        con = My_Connection.dbConnection();
-        if (!checkerExist(getUserName(), "userLogin", "uName"))// check on db if user exist if not then proceed
+        con = Main_Connection.getConnection();
+        if (!checkerExist(getUserName(), "userlogin", "uName"))// check on db if user exist if not then proceed
         {
             try {
-                String query = "Insert into userLogin(Name,uPos,uName,uPass)values(?,?,?,?)";
+                String query = "Insert into userlogin(Name,uPos,uName,uPass)values(?,?,?,?)";
                 pst = con.prepareStatement(query);
                 pst.setString(1, getName());
                 pst.setString(2, pos);
@@ -114,10 +94,10 @@ public class LoginEvents {
     public void loginAction() {
         // PreparedStatement pst;
         // System.out.println(curTime);
-        con = My_Connection.dbConnection();
+        con = Main_Connection.getConnection();
         mainFrame form = mainFrame.getInstance();
         try {
-            String query = "Select * from userLogin where uName=? and uPass=?";
+            String query = "Select * from userlogin where uName=? and uPass=?";
             pst = con.prepareStatement(query);
             pst.setString(1, getUserName());
             pst.setString(2, getPassword());
