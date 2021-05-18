@@ -6,6 +6,7 @@
 package poscnsl2;
 
 import java.awt.Color;
+import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -667,10 +668,16 @@ public final class mainFrame extends javax.swing.JFrame {
         // putting money exchange
         //    PreparedStatement pst;
         // ResultSet rs;
-        if (lblTotal.getText().equals("0.0") || lblTotal.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Total is empty");
-        } else {
-            mEvent.setCashierName(lblSeller.getText());
+        if(lblTotal.getText().equals("0.0")||lblTotal.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Empty!");
+        }else{
+             mEvent.setMoneys(JOptionPane.showInputDialog("Input Money"));
+         try{
+                 mEvent.setMoney(Float.parseFloat(mEvent.getMoneys()));
+            if(mEvent.getMoney() < mEvent.getDisplayAllTotal()){
+                 JOptionPane.showMessageDialog(null, "Money too low");
+            }else{
+                  mEvent.setCashierName(lblSeller.getText());
             mEvent.setTime(lblTime.getText());
             mEvent.setTransactionID(lblTransaction.getText());
             mEvent.setDateToday(dbDate);
@@ -681,9 +688,11 @@ public final class mainFrame extends javax.swing.JFrame {
             bNewTransaction.setEnabled(true);
             lblCurStock.setText("");
             clear();
+            }
+         }catch(Exception e){
+             JOptionPane.showMessageDialog(null, "Invalid");
+         }
         }
-
-
     }//GEN-LAST:event_bcashOutActionPerformed
 
     private void tfItemCodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfItemCodeKeyTyped
@@ -861,6 +870,7 @@ public final class mainFrame extends javax.swing.JFrame {
                 setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                 dispose();
                 clearAll();
+                mEvent.clearMap();
             } else{
                 setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
             }
@@ -875,6 +885,7 @@ public final class mainFrame extends javax.swing.JFrame {
             dispose();
              LoginSystem.getInstance().hInvalid();
              clearAll();
+             mEvent.clearMap();
         }
        
     }

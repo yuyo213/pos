@@ -87,20 +87,11 @@ public class mainFrameEvents {
         getSum(tableSoldItems);
 
     }
-
+    private String moneys;
     /*-----------Cash Out-----------*/
     public void cashOut(JTextArea jTextArea1, JTable tableSoldItems, JTable tableStock) {
         con = Main_Connection.getConnection();
         DefaultTableModel dtm = (DefaultTableModel) tableSoldItems.getModel();
-        String moneys = JOptionPane.showInputDialog("Input Money");
-        if (moneys == null || (" ".equals(moneys))) {
-            JOptionPane.showMessageDialog(null, "empty Fields");
-        } else {
-            setMoney(Float.parseFloat(moneys));
-            if (getMoney() < getDisplayAllTotal() || moneys.equals("0")) {
-                JOptionPane.showMessageDialog(null, "Please Try again", "Invalid", 2);
-            } else {
-
                 float result = getMoney() - getDisplayAllTotal();
                 setMoneyExchange(result);
                 printhead(jTextArea1);
@@ -171,8 +162,8 @@ public class mainFrameEvents {
                     } catch (SQLException ex) {
                     }
                 }
-            }
-        }
+        clearMap();
+        
     }
 
     /*-----------Update Stock when new transaction-----------*/
@@ -422,8 +413,11 @@ public class mainFrameEvents {
         clear();
         transIDs();
         id();
+        clearMap();
     }
-
+public void clearMap(){
+    map.clear();
+}
     public void startTran(JTable tableStock) {
         updateTableStock(tableStock);
         clear();
@@ -719,5 +713,19 @@ public class mainFrameEvents {
      */
     public void setcID(String cID) {
         this.cID = cID;
+    }
+
+    /**
+     * @return the moneys
+     */
+    public String getMoneys() {
+        return moneys;
+    }
+
+    /**
+     * @param moneys the moneys to set
+     */
+    public void setMoneys(String moneys) {
+        this.moneys = moneys;
     }
 }
