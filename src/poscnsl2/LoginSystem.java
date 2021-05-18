@@ -34,7 +34,8 @@ public final class LoginSystem extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         panelChanger(mainPanel, loginPanel);
         // Encrypt("admin");
-
+        clear();
+       
     }
 
     public static LoginSystem getInstance() {
@@ -49,7 +50,9 @@ public final class LoginSystem extends javax.swing.JFrame {
         tfUser.setText("");
         pfCreatePass.setText("");
     }
-
+    public void hInvalid(){
+         lblInvalid.setText("");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

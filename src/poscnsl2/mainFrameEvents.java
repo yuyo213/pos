@@ -349,7 +349,7 @@ public class mainFrameEvents {
         //searching id or code in the database if exist fill the fields with its contents
         int flg = 0;
         try {
-            String query = "Select itemName,itemPrice,itemQuantity,itemStock from itemlists where " + value + "=?";
+            String query = "Select * from itemlists where " + value + "=?";
             pst = con.prepareStatement(query);
             pst.setString(1, sText);
             rs = pst.executeQuery();
@@ -389,7 +389,8 @@ public class mainFrameEvents {
     private void jtabs(JTable tableSoldItems, JButton badd, JTextField id, JTextField code) {// check tablestock stock 
         DefaultTableModel tb1 = (DefaultTableModel) tableSoldItems.getModel();
         for (int i = 0; i < tableSoldItems.getRowCount(); i++) {
-            if (tableSoldItems.getModel().getValueAt(i, 0).equals(getItemName())) {
+            for(int j= 0; j< tableSoldItems.getColumnCount(); j++){
+            if (tableSoldItems.getModel().getValueAt(i, j).equals(getItemName())) {
                 setCurrentStock(Integer.parseInt(tb1.getValueAt(i, 2) + ""));
                 if (getCurrentStock() <= 0) {// if stock is equal to 0
                     JOptionPane.showMessageDialog(null, getItemName() + " is Out Of Stock, Sorry");
@@ -401,6 +402,7 @@ public class mainFrameEvents {
                     badd.setEnabled(true);
                 }
             }
+        }
         }
     }
 
@@ -491,7 +493,7 @@ public class mainFrameEvents {
         int selectedRowIndex = tableSoldItems.getSelectedRow();
 
         try {
-            String query = "SELECT itemName,itemStock,itemQuantity,itemPrice FROM `itemlists` WHERE `itemName` = ?";
+            String query = "SELECT * FROM `itemlists` WHERE `itemName` = ?";
             pst = con.prepareStatement(query);
             pst.setString(1, (String) dtm.getValueAt(selectedRowIndex, 0));
             rs = pst.executeQuery();

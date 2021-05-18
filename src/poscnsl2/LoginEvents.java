@@ -111,9 +111,10 @@ public class LoginEvents {
                         form.seller();
                     } else {//if not
                         System.out.println("WOOOOOOW you're an admin");
+                        form.admin();
                     }
                     form.user(getCashier());
-                    timeIn();
+                  //  timeIn();
                     form.setVisible(true);
                     form.pack();
                     form.setLocationRelativeTo(null);

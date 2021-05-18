@@ -67,6 +67,9 @@ public final class mainFrame extends javax.swing.JFrame {
             lblSeller.setText("Developer");
         }
     }
+    public void admin(){
+        bOption.setEnabled(true);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -739,7 +742,9 @@ public final class mainFrame extends javax.swing.JFrame {
         if (lblName.getText().equals("") || lblPrice.getText().equals("") || lblCurStock.getText().equals("")
                 || lblTotStock.getText().equals("") || tfQuantity.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Select an Item");
-        } else {
+        } else if(lblCurStock.getText().equals("0")||tfQuantity.getText().equals("0")){
+            JOptionPane.showMessageDialog(null, "Invalid");
+        }else{
             mEvent.setItemName(lblName.getText());
             mEvent.setItemQuantity(Integer.parseInt(tfQuantity.getText()));
             mEvent.setItemPrice(Float.parseFloat(lblPrice.getText()));
@@ -782,13 +787,12 @@ public final class mainFrame extends javax.swing.JFrame {
         //     CurStock();
 
         mEvent.CurStock(tableSoldItems, tableStock, baddItem, tfID, tfItemCode);
-        if (tfQuantity.getText().equals("") || lblTotStock.getText().equals("")) {
-            tfQuantity.setText("0");
-            tfQuantity.selectAll();
-        }
+      try{
         mEvent.setItemQuantity(Integer.parseInt(tfQuantity.getText()));
         mEvent.setTotalQuantity(Integer.parseInt(lblTotStock.getText()));
-
+      }catch(NumberFormatException e){
+          lblCurStock.setText(lblTotStock.getText());
+      }
         mEvent.autoSum2();
         String currentStock = String.valueOf(mEvent.getCurrentStock());
         lblCurStock.setText(currentStock);
@@ -818,6 +822,19 @@ public final class mainFrame extends javax.swing.JFrame {
     private void lblLogOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogOutMouseClicked
         closeWin();
     }//GEN-LAST:event_lblLogOutMouseClicked
+    private void clearAll(){
+        clear();
+        tfID.setText("");
+        tfItemCode.setText("");
+        DefaultTableModel model = (DefaultTableModel)tableSoldItems.getModel();
+          model.fireTableDataChanged();
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+            mEvent.startTran(tableStock);
+            lblTotal.setText("");
+            lblExchange.setText("");
+    }
     int posX=0,posY=0;
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
         // TODO add your handling code here:
@@ -836,26 +853,30 @@ public final class mainFrame extends javax.swing.JFrame {
                     JOptionPane.QUESTION_MESSAGE, null, null, null);
             if (input == JOptionPane.OK_OPTION) {
                 LoginSystem log = LoginSystem.getInstance();
-                mEvent.setTime(lblTime.getText());
-                mEvent.timeOut();
+               // mEvent.setTime(lblTime.getText());
+               // mEvent.timeOut();
                 log.setVisible(true);
                 log.clearLogin();
                 aesthetic(lblLogOut, BevelBorder.RAISED, Color.black);
                 setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                 dispose();
-            } else {
+                clearAll();
+            } else{
                 setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
             }
         } else {
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             LoginSystem log = LoginSystem.getInstance();
-            mEvent.setTime(lblTime.getText());
-            mEvent.timeOut();
+          //  mEvent.setTime(lblTime.getText());
+          //  mEvent.timeOut();
             log.setVisible(true);
             log.clearLogin();
             aesthetic(lblLogOut, BevelBorder.RAISED, Color.black);
             dispose();
+             LoginSystem.getInstance().hInvalid();
+             clearAll();
         }
+       
     }
 
     private void numberonly(KeyEvent evt) {
