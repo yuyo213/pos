@@ -14,13 +14,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import net.proteanit.sql.DbUtils;
-import static poscnsl2.LoginSystem.con;
+import java.sql.Connection;
 
 /**
  *
  * @author Butaw
  */
 public class POSCnsl {
+
+    static Connection con = null;
+    static PreparedStatement pst = null;
+    static ResultSet rs = null;
 
     /**
      * @param args the command line arguments
@@ -43,14 +47,12 @@ public class POSCnsl {
     }
 
     static final boolean checkerExist(String input, String table, String field) {//check username/uName if exist
-        PreparedStatement pst;
-        ResultSet rs;
+        con = Main_Connection.getConnection();
         boolean user_exist = false;
 
-        String query = "SELECT * FROM " + table + " WHERE " + field + " = ?";
+        String query = "SELECT uName FROM " + table + " WHERE " + field + " = ?";
 
         try {
-            con.beginRequest();
             pst = con.prepareStatement(query);
             pst.setString(1, input);
             rs = pst.executeQuery();
@@ -60,7 +62,8 @@ public class POSCnsl {
                 JOptionPane.showMessageDialog(null, "Already Exist", "Failed", 2);
 
             }
-            con.endRequest();
+            rs.close();
+            pst.close();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -68,22 +71,18 @@ public class POSCnsl {
     }
 
     static final void tableUpdates(JTable table, String sql) {// print all data in itemName in tableAddItem
+       con = Main_Connection.getConnection();
         try {
-            con.beginRequest();
-            PreparedStatement pst;
-            ResultSet rs;
             //   String sql = "select * from itemLists";
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
             table.setModel(DbUtils.resultSetToTableModel(rs));
             rs.close();
-            con.endRequest();
+            pst.close();
+            con.close();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
-    
-    public static void main(String[] args) {
 
-    }
 }
